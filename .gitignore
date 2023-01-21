@@ -7,8 +7,10 @@
 
 # misc
 .DS_Store
+*.dSYM
 .vscode/*
 
 .obsidian/
 obj/
-ft_nm*
+ft_nm
+ft_nm_test
