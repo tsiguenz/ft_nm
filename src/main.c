@@ -1,6 +1,6 @@
 #ifndef __IS_TEST__
 
-#include "../include/ft_nm.h"
+#include <ft_nm.h>
 
 int main(int ac, char **av) {
   if (ac != 2) {
