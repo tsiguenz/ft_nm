@@ -14,7 +14,21 @@ int main(int ac, char **av) {
     write(2, ": No such file or directory\n", 28);
     return (1);
   }
-  ft_printf("fd = %d\n", fd);
+
+  struct stat fs;
+  if (fstat(fd, &fs) == -1) {
+    write(2, "error: fstat fail\n", 18);
+    return (1);
+  }
+  char *addr = mmap(NULL, fs.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+  if (addr == MAP_FAILED) {
+    write(2, "error: mmap fail\n", 17);
+    return (1);
+  }
+  for (int i = 0; i < fs.st_size; i++)
+    write(1, &addr[i], 1);
+  munmap(addr, fs.st_size);
+  close(fd);
   return (0);
 }
 
