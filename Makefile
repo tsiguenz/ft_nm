@@ -34,8 +34,6 @@ all: $(NAME)
 $(LIBFT):
 	@make -C libft/ --no-print-directory
 
-
-# Test rule
 test:
 	$(CC) $(FLAGS) $(HEADERS) $(LIBS) -D __IS_TEST__ $(TEST_SRC) $(SRC) -o $(TEST_NAME)
 

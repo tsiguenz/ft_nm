@@ -1,18 +1,27 @@
 # TODO
 
+- **DO UNIT TESTS AND CI BEFORE THE PROJECT WAS FINISHED PLS**
+
 ## Test cases
 
-### File format
+### Unit tests
+
+#### File format
 
 - [ ] ELF
 - [ ] directory
 - [ ] casual file
 - [ ] empty file
 
-### Architecture
+#### Architecture
 
-- [ ] x32
-- [ ] x64
-- [ ] other to trigger ```int is_bad_arch(uint8_t *map);```
+- [ ] x32 (/lib32)
+- [ ] x64 (/lib)
+- [ ] byte equal to ELFCLASSNONE (use xxd to edit binary file)
+- for this two cases idk how nm said the format is bad but its obvious
+- [ ] x32 elf with arch byte change to x64
+- [ ] x64 elf with arch byte change to x32
 
-### Multi files as argument
+### Functional tests
+
+- [ ] Multi files as argument

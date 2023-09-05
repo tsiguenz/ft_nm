@@ -46,16 +46,13 @@ int check_format(uint8_t *map, char *filename) {
   return 0;
 }
 
-int is_32_bits(uint8_t *map) { return (*(map + 0x4) == ELFCLASS32) ? 1 : 0; }
-int is_64_bits(uint8_t *map) { return (*(map + 0x4) == ELFCLASS64) ? 1 : 0; }
-int is_bad_arch(uint8_t *map) { return (*(map + 0x4) == ELFCLASSNONE) ? 1 : 0; }
-
 int set_arch(uint8_t *map, char *filename, char *arch) {
   *arch = *(map + 0x4);
-  if (*arch == ELFCLASSNONE) {
+  if (*arch == ELFCLASSNONE || *arch > 2) {
     ft_putstr_fd(PROG_NAME ": ", 2);
     ft_putstr_fd(filename, 2);
-    ft_putstr_fd(": file architecture not recognized\n", 2);
+    ft_putstr_fd(": file format not recognized\n", 2);
+    return 1;
   }
   return 0;
 }
