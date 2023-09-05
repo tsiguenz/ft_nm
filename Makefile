@@ -11,7 +11,8 @@ LIBFT = libft/libft.a
 LIBS = -Llibft -lft
 HEADERS = -Iinclude -Ilibft
 
-SRC_NAME = main.c
+SRC_NAME = main.c \
+					 nm_wrapper.c
 TEST_SRC_NAME = test_main.c
 OBJ_NAME = $(SRC_NAME:.c=.o)
 
