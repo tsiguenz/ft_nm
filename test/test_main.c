@@ -1,15 +1,10 @@
-#include "../include/ft_nm.h"
 #include "include/test.h"
 
 int tests_run = 0;
 
-// static char *test_max() {
-//   // mu_assert("error, max(0, 1)", max(0, 1) == 1);
-//   return 0;
-// }
-
-static char *all_tests() {
-  // mu_run_test(test_max);
+static char *all_tests(void) {
+  mu_run_test(set_fd_tests);
+  mu_run_test(set_file_size_tests);
   return 0;
 }
 
@@ -17,9 +12,9 @@ int main(void) {
   char *result = all_tests();
 
   if (result != 0)
-    printf("%s\n", result);
+    printf("\e[31mERROR: %s\n", result);
   else
-    printf("ALL TESTS PASSED\n");
-  printf("Tests run: %d\n", tests_run);
+    printf("\e[32mALL TESTS PASSED\n");
+  printf("Tests run: %d\n\e[0m", tests_run);
   return result != 0;
 }

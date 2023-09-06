@@ -12,8 +12,13 @@ LIBS = -Llibft -lft
 HEADERS = -Iinclude -Ilibft
 
 SRC_NAME = main.c \
-					 nm_wrapper.c
-TEST_SRC_NAME = test_main.c
+					 nm_wrapper.c \
+					 init.c \
+
+TEST_SRC_NAME = test_main.c \
+								set_fd_tests.c \
+								set_file_size_tests.c \
+
 OBJ_NAME = $(SRC_NAME:.c=.o)
 
 OBJ = $(addprefix $(OBJ_PATH), $(OBJ_NAME))
@@ -34,8 +39,9 @@ all: $(NAME)
 $(LIBFT):
 	@make -C libft/ --no-print-directory
 
-test:
-	$(CC) $(FLAGS) $(HEADERS) $(LIBS) -D __IS_TEST__ $(TEST_SRC) $(SRC) -o $(TEST_NAME)
+test: $(LIBFT)
+	@$(CC) $(FLAGS) $(HEADERS) -D __IS_TEST__ $(TEST_SRC) $(SRC) $(LIBS) -o $(TEST_NAME)
+	./$(TEST_NAME) # 2> /dev/null
 
 clean:
 	@make clean -C libft/ --no-print-directory
