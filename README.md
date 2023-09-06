@@ -6,6 +6,10 @@ The aim of the project is to recode
 [nm](https://man7.org/linux/man-pages/man1/nm.1.html) without options.
 The bonuses are to recode -a -g -u -r -p.
 
+## Create x86_32 binaries
+
+- To create x86_32 binary use -m32 flag with gcc
+
 ## Edit binary file
 
 1. Open file in vim in binary mode: `vim -b [filename]`
@@ -18,6 +22,6 @@ The bonuses are to recode -a -g -u -r -p.
 
 ## Useful links
 
-- [elf wiki](<https://en.wikipedia.org/wiki/Executable_and_Linkable_Format#Unix-like_systems>)
+- [elf wiki](<https://en.wikipedia.org/wiki/Executable_and_Linkable_Format>)
 - [man elf](https://www.man7.org/linux/man-pages/man5/elf.5.html)
 - [binary dissection course](https://github.com/compilepeace/BINARY_DISSECTION_COURSE/tree/master)
