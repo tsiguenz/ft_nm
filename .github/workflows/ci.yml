@@ -2,7 +2,7 @@ name: ci
 on: [push, pull_request]
 jobs:
   ci_job:
-    runs-on: debian-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Setup C/C++ Compiler
         uses: rlalik/setup-cpp-compiler@v1.2
