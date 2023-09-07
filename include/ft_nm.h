@@ -18,5 +18,7 @@ int set_file_size(char *filename, int fd, off_t *file_size);
 int set_mapped_file(int fd, off_t file_size, uint8_t **map);
 int check_format(uint8_t *map, char *filename);
 int set_arch(uint8_t *map, char *filename, char *arch);
+void handle_elf32(char *filename, uint8_t *map);
+void handle_elf64(char *filename, uint8_t *map);
 
 #endif  // FT_NM_H
