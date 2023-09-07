@@ -7,6 +7,6 @@ jobs:
       - name: Setup C/C++ Compiler
         uses: rlalik/setup-cpp-compiler@v1.2
       - name: Install make
-        run: apt install -y make
+        run: sudo apt-get install -y make
       - name: Run tests
         run: make test
