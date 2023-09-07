@@ -13,8 +13,8 @@ char *set_file_size_tests(void) {
   {
     char *filename = "test/bin/empty";
     set_fd(filename, &fd);
-    set_file_size(filename, fd, &file_size);
-    mu_assert(__FILE__ ": empty file", file_size == 0);
+    mu_assert(__FILE__ ": empty file",
+              set_file_size(filename, fd, &file_size) == 1);
     close(fd);
   }
   {

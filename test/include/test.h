@@ -23,5 +23,7 @@ extern int tests_run;
 
 char *set_fd_tests(void);
 char *set_file_size_tests(void);
+char *check_format_tests(void);
+char *set_arch_tests(void);
 
 #endif  // TEST_H

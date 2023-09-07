@@ -18,6 +18,8 @@ SRC_NAME = main.c \
 TEST_SRC_NAME = test_main.c \
 								set_fd_tests.c \
 								set_file_size_tests.c \
+								check_format_tests.c \
+								set_arch_tests.c \
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 

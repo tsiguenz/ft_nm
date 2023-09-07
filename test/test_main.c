@@ -5,6 +5,8 @@ int tests_run = 0;
 static char *all_tests(void) {
   mu_run_test(set_fd_tests);
   mu_run_test(set_file_size_tests);
+  mu_run_test(check_format_tests);
+  mu_run_test(set_arch_tests);
   return 0;
 }
 

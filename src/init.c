@@ -21,6 +21,9 @@ int set_file_size(char *filename, int fd, off_t *file_size) {
     ft_printf_fd(2, "%s: Warning: '%s' is a directory\n", PROG_NAME, filename);
     return EXIT_FAILURE;
   }
+  if (!fs.st_size) {
+    return EXIT_FAILURE;
+  }
   *file_size = fs.st_size;
   return EXIT_SUCCESS;
 }
@@ -53,7 +56,7 @@ int set_arch(uint8_t *map, char *filename, char *arch) {
   if (*arch == ELFCLASSNONE || *arch > 2) {
     ft_printf_fd(2, "%s: '%s': File format not recognized\n", PROG_NAME,
                  filename);
-    return EXIT_SUCCESS;
+    return EXIT_FAILURE;
   }
   return EXIT_SUCCESS;
 }
