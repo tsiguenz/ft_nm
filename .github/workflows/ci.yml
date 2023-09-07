@@ -1,0 +1,12 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  ci_job:
+    runs-on: debian_latest
+    steps:
+      - name: Setup C/C++ Compiler
+        uses: rlalik/setup-cpp-compiler@v1.2
+      - name: install-cmake
+        uses: Symbitic/install-cmake@v0.1.0
+      - name: Run tests
+        run: make test
