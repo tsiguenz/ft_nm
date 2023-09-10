@@ -5,7 +5,9 @@
 
 ## Test cases
 
-### Unit tests
+### Functional tests
+
+- [ ] Multi files as argument
 
 #### File format
 
@@ -21,11 +23,8 @@
 - [ ] byte equal to ELFCLASSNONE (use xxd to edit binary file)
 - [ ] x32 elf with arch byte change to x64
 - [ ] x64 elf with arch byte change to x32
+- [ ] file with offset point out of the mapped content
 
 ### Permissions
 
 - [ ] No read permissions
-
-### Functional tests
-
-- [ ] Multi files as argument
