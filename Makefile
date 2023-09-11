@@ -14,6 +14,8 @@ HEADERS = -Iinclude -Ilibft
 SRC_NAME = main.c \
 					 nm_wrapper.c \
 					 init.c \
+					 x64/handle_elf64.c \
+					 x86_32/handle_elf32.c \
 
 TEST_SRC_NAME = test_main.c \
 								set_fd_tests.c \
@@ -43,7 +45,10 @@ $(LIBFT):
 
 test: $(LIBFT)
 	@$(CC) $(FLAGS) $(HEADERS) -D __IS_TEST__ $(TEST_SRC) $(SRC) $(LIBS) -o $(TEST_NAME)
+	@touch test/bin/no_perm
+	@chmod 000 test/bin/no_perm
 	./$(TEST_NAME) # 2> /dev/null
+	@rm -rf test/bin/no_perm
 
 clean:
 	@make clean -C libft/ --no-print-directory

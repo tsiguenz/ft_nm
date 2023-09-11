@@ -1,7 +1,6 @@
 # TODO
 
-- **DO UNIT TESTS AND CI BEFORE THE PROJECT WAS FINISHED PLS**
-- Use perror instead of my errors
+- Test to change the value of sh_link
 
 ## Test cases
 
@@ -23,7 +22,11 @@
 - [ ] byte equal to ELFCLASSNONE (use xxd to edit binary file)
 - [ ] x32 elf with arch byte change to x64
 - [ ] x64 elf with arch byte change to x32
+
+### Misc
+
 - [ ] file with offset point out of the mapped content
+- [ ] change the value of sh_link
 
 ### Permissions
 

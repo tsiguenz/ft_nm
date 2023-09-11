@@ -1,0 +1,126 @@
+#include <ft_nm.h>
+
+int set_elf64_infos(t_elf64 *elf, uint8_t *map, char *file_name,
+                    off_t file_size) {
+  elf->map       = map;
+  elf->file_name = file_name;
+  elf->file_size = file_size;
+  elf->header    = (Elf64_Ehdr *) map;
+  elf->sections  = (Elf64_Shdr *) &map[elf->header->e_shoff];
+  elf->shstrtab =
+      (char *) &map[elf->sections[elf->header->e_shstrndx].sh_offset];
+
+  for (int i = 0; i < elf->header->e_shnum; i++) {
+    const char *section_name = &elf->shstrtab[elf->sections[i].sh_name];
+
+    if (!ft_strncmp(".symtab", section_name, ft_strlen(".symtab")) &&
+        elf->sections[i].sh_type == SHT_SYMTAB) {
+      elf->symtab      = (Elf64_Sym *) &map[elf->sections[i].sh_offset];
+      elf->symtab_size = elf->sections[i].sh_size;
+    }
+    if (!ft_strncmp(".strtab", section_name, ft_strlen(".strtab")) &&
+        elf->sections[i].sh_type == SHT_STRTAB) {
+      elf->strtab = (char *) &map[elf->sections[i].sh_offset];
+    }
+    if (!ft_strncmp(".dynsym", section_name, ft_strlen(".dynsym")) &&
+        elf->sections[i].sh_type == SHT_DYNSYM) {
+      elf->dynsym      = (Elf64_Sym *) &map[elf->sections[i].sh_offset];
+      elf->dynsym_size = elf->sections[i].sh_size;
+    }
+    if (!ft_strncmp(".dynstr", section_name, ft_strlen(".dynstr")) &&
+        elf->sections[i].sh_type == SHT_STRTAB) {
+      elf->dynstr = (char *) &map[elf->sections[i].sh_offset];
+    }
+  }
+  return EXIT_SUCCESS;
+}
+
+void print_symtab_x64(t_elf64 elf) {
+  ft_printf("symtab: \n");
+  for (uint64_t i = 0; i < elf.symtab_size / sizeof(Elf64_Sym); i++) {
+    char *sym_name = &elf.strtab[elf.symtab[i].st_name];
+    ft_printf("[%d] %s", i, sym_name);
+    if (elf.symtab[i].st_value)
+      ft_printf(" %p", elf.symtab[i].st_value);
+    ft_printf("\n");
+  }
+}
+
+void print_dynsym_x64(t_elf64 elf) {
+  ft_printf("dynsym: \n");
+  for (uint64_t i = 0; i < elf.dynsym_size / sizeof(Elf64_Sym); i++) {
+    char *sym_name = &elf.dynstr[elf.dynsym[i].st_name];
+    ft_printf("[%d] %s ", i, sym_name);
+    if (elf.dynsym[i].st_value)
+      ft_printf("%p", elf.dynsym[i].st_value);
+    ft_printf("\n");
+  }
+}
+
+int push_symbol(t_symbol **lst, char *name, Elf64_Addr value, char type) {
+  t_symbol *tmp = *lst;
+  t_symbol *new = malloc(1 * sizeof(t_symbol));
+
+  if (!new)
+    return EXIT_FAILURE;
+  new->name  = name;
+  new->value = value;
+  new->type  = type;
+  new->next  = NULL;
+  if (!*lst) {
+    *lst = new;
+    return EXIT_SUCCESS;
+  }
+  while (tmp->next)
+    tmp = tmp->next;
+  tmp->next = new;
+  return EXIT_SUCCESS;
+}
+
+void clear_list(t_symbol **lst) {
+  if (!lst || !*lst)
+    return;
+  t_symbol *tmp;
+
+  while (lst && *lst) {
+    tmp = (*lst)->next;
+    free(*lst);
+    *lst = tmp;
+  }
+  *lst = NULL;
+}
+
+int parse_elf64(t_elf64 elf, t_symbol **lst) {
+  for (uint64_t i = 0; i < elf.symtab_size / sizeof(Elf64_Sym); i++) {
+    char      *name  = &elf.strtab[elf.symtab[i].st_name];
+    Elf64_Addr value = elf.dynsym[i].st_value;
+    char       type  = '?';
+
+    if (push_symbol(lst, name, value, type)) {
+      clear_list(lst);
+      return EXIT_FAILURE;
+    }
+  }
+  t_symbol *tmp = *lst;
+
+  int i = 0;
+  while (tmp) {
+    ft_printf("[%d] %s %p %c\n", i, tmp->name, tmp->value, tmp->type);
+    i++;
+    tmp = tmp->next;
+  }
+  return EXIT_SUCCESS;
+}
+
+int handle_elf64(char *file_name, uint8_t *map, off_t file_size) {
+  t_elf64   elf = {0};
+  t_symbol *lst = {0};
+
+  set_elf64_infos(&elf, map, file_name, file_size);
+  if (parse_elf64(elf, &lst))
+    return EXIT_FAILURE;
+  // print_symtab_x64(elf);
+  // print_dynsym_x64(elf);
+  clear_list(&lst);
+  return EXIT_SUCCESS;
+}

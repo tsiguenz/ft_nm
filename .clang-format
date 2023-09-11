@@ -1,2 +1,11 @@
 ---
 SpacesBeforeTrailingComments: 2
+PointerAlignment: Right
+ReflowComments: false
+SpaceAfterCStyleCast: true
+SpaceBeforeAssignmentOperators: true
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+AlignOperands: true
+ColumnLimit: 80
