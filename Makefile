@@ -14,8 +14,13 @@ HEADERS = -Iinclude -Ilibft
 SRC_NAME = main.c \
 					 nm_wrapper.c \
 					 init.c \
-					 x64/handle_elf64.c \
-					 x86_32/handle_elf32.c \
+					 x64/handle_elf.c \
+					 x64/parsing.c \
+					 x64/print.c \
+\
+					 x86_32/handle_elf.c \
+
+
 
 TEST_SRC_NAME = test_main.c \
 								set_fd_tests.c \

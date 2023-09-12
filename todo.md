@@ -1,7 +1,5 @@
 # TODO
 
-- Test to change the value of sh_link
-
 ## Test cases
 
 ### Functional tests
