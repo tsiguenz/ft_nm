@@ -73,6 +73,7 @@ int set_type64(char *type, Elf64_Sym symbol, t_elf64 elf) {
   char is_global = ELF64_ST_BIND(symbol.st_info);
 
   if (is_global != STB_GLOBAL && is_global != STB_LOCAL) {
+    // TODO: handle error here
     *type = '?';
     return EXIT_SUCCESS;
   }

@@ -65,6 +65,7 @@ int  set_elf64_infos(t_elf64 *elf, uint8_t *map, char *file_name,
 int  parse_symbols64(t_elf64 elf, t_symbol **symbol);
 void print_symbols64(t_symbol *lst);
 void clear_list(t_symbol **lst);
+void sort_default64(t_symbol **lst);
 
 // 32 bits
 int  handle_elf32(char *file_name, uint8_t *map, off_t file_size);
