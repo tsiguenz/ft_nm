@@ -24,7 +24,7 @@ void print_dynsym_x64(t_elf64 elf) {
 
 void print_value64(Elf64_Addr value) {
   if (!value) {
-    ft_printf("                 ");
+    ft_printf("                ");
     return;
   }
   int        nb_char = 1;
@@ -43,7 +43,7 @@ void print_value64(Elf64_Addr value) {
 void print_symbols64(t_symbol *lst) {
   while (lst) {
     print_value64(lst->value);
-    ft_printf(" %s %c\n", lst->name, lst->type);
+    ft_printf(" %c %s\n", lst->type, lst->name);
     lst = lst->next;
   }
 }

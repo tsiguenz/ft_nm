@@ -68,14 +68,29 @@ void clear_list(t_symbol **lst) {
   *lst = NULL;
 }
 
+int set_type64(char *type, Elf64_Sym symbol, t_elf64 elf) {
+  (void) elf;
+  char is_global = ELF64_ST_BIND(symbol.st_info);
+
+  if (is_global != STB_GLOBAL && is_global != STB_LOCAL) {
+    *type = '?';
+    return EXIT_SUCCESS;
+  }
+  *type = 'a';
+  if (is_global == STB_GLOBAL)
+    *type -= 32;
+  return EXIT_SUCCESS;
+}
+
 int parse_symtab64(t_elf64 elf, t_symbol **lst) {
   Elf64_Sym *symtab = elf.symtab;
   for (uint64_t i = 0; i < elf.symtab_size / sizeof(Elf64_Sym); i++) {
     char      *name  = &elf.strtab[symtab[i].st_name];
     Elf64_Addr value = symtab[i].st_value;
-    char       type  = '?';
+    char       type;
 
-    if (push_symbol(lst, name, value, type)) {
+    if (set_type64(&type, symtab[i], elf) ||
+        push_symbol(lst, name, value, type)) {
       clear_list(lst);
       return EXIT_FAILURE;
     }
@@ -88,9 +103,10 @@ int parse_dynsym64(t_elf64 elf, t_symbol **lst) {
   for (uint64_t i = 0; i < elf.dynsym_size / sizeof(Elf64_Sym); i++) {
     char      *name  = &elf.dynstr[dynsym[i].st_name];
     Elf64_Addr value = dynsym[i].st_value;
-    char       type  = '?';
+    char       type;
 
-    if (push_symbol(lst, name, value, type)) {
+    if (set_type64(&type, dynsym[i], elf) ||
+        push_symbol(lst, name, value, type)) {
       clear_list(lst);
       return EXIT_FAILURE;
     }
