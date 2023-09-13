@@ -83,7 +83,21 @@ static int is_data_section(Elf64_Shdr section, t_elf64 elf) {
 }
 
 static int is_text_section(Elf64_Shdr section, t_elf64 elf) {
-  const char *section_name = "text";
+  const char *section_name = ".text";
+  return section.sh_type == SHT_PROGBITS &&
+         !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
+                     ft_strlen(section_name));
+}
+
+static int is_fini_section(Elf64_Shdr section, t_elf64 elf) {
+  const char *section_name = ".fini";
+  return section.sh_type == SHT_PROGBITS &&
+         !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
+                     ft_strlen(section_name));
+}
+
+static int is_init_section(Elf64_Shdr section, t_elf64 elf) {
+  const char *section_name = ".init";
   return section.sh_type == SHT_PROGBITS &&
          !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
                      ft_strlen(section_name));
@@ -111,7 +125,8 @@ static int set_type(char *type, Elf64_Sym symbol, t_elf64 elf,
   *type = '?';
   if (get_section_by_index64(&section, shndx, elf))
     *type = 'u';
-  if (is_text_section(section, elf))
+  if (is_text_section(section, elf) || is_init_section(section, elf) ||
+      is_fini_section(section, elf))
     *type = 't';
   if (is_data_section(section, elf))
     *type = 'd';
@@ -132,13 +147,11 @@ static int set_type(char *type, Elf64_Sym symbol, t_elf64 elf,
 
 static int parse_symtab(t_elf64 elf, t_symbol **lst) {
   Elf64_Sym *symtab = elf.symtab;
-  for (uint64_t i = 0; i < elf.symtab_size / sizeof(Elf64_Sym); i++) {
+  for (uint64_t i = 1; i < elf.symtab_size / sizeof(Elf64_Sym); i++) {
     char      *name  = &elf.strtab[symtab[i].st_name];
     Elf64_Addr value = symtab[i].st_value;
     char       type;
 
-    if (*name == '\0' && value == 0)
-      continue;
     if (set_type(&type, symtab[i], elf, name) ||
         push_symbol(lst, name, value, type)) {
       clear_list(lst);
@@ -150,7 +163,7 @@ static int parse_symtab(t_elf64 elf, t_symbol **lst) {
 
 static int parse_dynsym(t_elf64 elf, t_symbol **lst) {
   Elf64_Sym *dynsym = elf.dynsym;
-  for (uint64_t i = 0; i < elf.dynsym_size / sizeof(Elf64_Sym); i++) {
+  for (uint64_t i = 1; i < elf.dynsym_size / sizeof(Elf64_Sym); i++) {
     char      *name  = &elf.dynstr[dynsym[i].st_name];
     Elf64_Addr value = dynsym[i].st_value;
     char       type;

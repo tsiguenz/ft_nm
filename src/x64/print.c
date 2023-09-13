@@ -22,8 +22,8 @@ void print_dynsym_x64(t_elf64 elf) {
   }
 }
 
-void print_value64(Elf64_Addr value) {
-  if (!value) {
+void print_value64(Elf64_Addr value, t_symbol symbol) {
+  if (!value && ft_tolower(symbol.type) != 'a') {
     ft_printf("                ");
     return;
   }
@@ -42,7 +42,7 @@ void print_value64(Elf64_Addr value) {
 
 void print_symbols64(t_symbol *lst) {
   while (lst) {
-    print_value64(lst->value);
+    print_value64(lst->value, *lst);
     ft_printf(" %c %s\n", lst->type, lst->name);
     lst = lst->next;
   }
