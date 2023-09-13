@@ -68,22 +68,69 @@ void clear_list(t_symbol **lst) {
   *lst = NULL;
 }
 
-int set_type64(char *type, Elf64_Sym symbol, t_elf64 elf) {
-  (void) elf;
-  char is_global = ELF64_ST_BIND(symbol.st_info);
+int get_section_by_index64(Elf64_Shdr *section, int index, t_elf64 elf) {
+  if (index < 1 || index >= elf.header->e_shnum)
+    return EXIT_FAILURE;
+  *section = elf.sections[index];
+  return EXIT_SUCCESS;
+}
 
-  if (is_global != STB_GLOBAL && is_global != STB_LOCAL) {
+static int is_data_section(Elf64_Shdr section, t_elf64 elf) {
+  const char *section_name = ".data";
+  return section.sh_type == SHT_PROGBITS &&
+         !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
+                     ft_strlen(section_name));
+}
+
+static int is_text_section(Elf64_Shdr section, t_elf64 elf) {
+  const char *section_name = "text";
+  return section.sh_type == SHT_PROGBITS &&
+         !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
+                     ft_strlen(section_name));
+}
+
+static int is_bss_section(Elf64_Shdr section, t_elf64 elf) {
+  const char *section_name = ".bss";
+  return section.sh_type == SHT_NOBITS &&
+         !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
+                     ft_strlen(section_name));
+}
+
+static int set_type(char *type, Elf64_Sym symbol, t_elf64 elf,
+                    char *symbol_name) {
+  (void) symbol_name;
+  char       st_bind      = ELF64_ST_BIND(symbol.st_info);
+  char       st_type      = ELF64_ST_TYPE(symbol.st_info);
+  char       shndx        = symbol.st_shndx;
+  Elf64_Shdr section      = {0};
+  char       is_read_only = 0;
+
+  (void) is_read_only;
+  ft_printf("%s type: %d shndx: %d st_bind: %d\n", symbol_name, st_type, shndx,
+            st_bind);
+  *type = '?';
+  if (get_section_by_index64(&section, shndx, elf))
+    *type = 'u';
+  if (is_text_section(section, elf))
+    *type = 't';
+  if (is_data_section(section, elf))
+    *type = 'd';
+  if (is_bss_section(section, elf))
+    *type = 'b';
+  if (st_type == STT_FILE)
+    *type = 'a';
+  if (st_bind == STB_WEAK)
+    *type = 'w';
+  if (st_bind != STB_GLOBAL && st_bind != STB_LOCAL) {
     // TODO: handle error here
-    *type = '?';
     return EXIT_SUCCESS;
   }
-  *type = 'a';
-  if (is_global == STB_GLOBAL)
+  if (st_bind == STB_GLOBAL && *type != '?')
     *type -= 32;
   return EXIT_SUCCESS;
 }
 
-int parse_symtab64(t_elf64 elf, t_symbol **lst) {
+static int parse_symtab(t_elf64 elf, t_symbol **lst) {
   Elf64_Sym *symtab = elf.symtab;
   for (uint64_t i = 0; i < elf.symtab_size / sizeof(Elf64_Sym); i++) {
     char      *name  = &elf.strtab[symtab[i].st_name];
@@ -92,7 +139,7 @@ int parse_symtab64(t_elf64 elf, t_symbol **lst) {
 
     if (*name == '\0' && value == 0)
       continue;
-    if (set_type64(&type, symtab[i], elf) ||
+    if (set_type(&type, symtab[i], elf, name) ||
         push_symbol(lst, name, value, type)) {
       clear_list(lst);
       return EXIT_FAILURE;
@@ -101,7 +148,7 @@ int parse_symtab64(t_elf64 elf, t_symbol **lst) {
   return EXIT_SUCCESS;
 }
 
-int parse_dynsym64(t_elf64 elf, t_symbol **lst) {
+static int parse_dynsym(t_elf64 elf, t_symbol **lst) {
   Elf64_Sym *dynsym = elf.dynsym;
   for (uint64_t i = 0; i < elf.dynsym_size / sizeof(Elf64_Sym); i++) {
     char      *name  = &elf.dynstr[dynsym[i].st_name];
@@ -110,7 +157,7 @@ int parse_dynsym64(t_elf64 elf, t_symbol **lst) {
 
     if (*name == '\0' && value == 0)
       continue;
-    if (set_type64(&type, dynsym[i], elf) ||
+    if (set_type(&type, dynsym[i], elf, name) ||
         push_symbol(lst, name, value, type)) {
       clear_list(lst);
       return EXIT_FAILURE;
@@ -120,7 +167,7 @@ int parse_dynsym64(t_elf64 elf, t_symbol **lst) {
 }
 
 int parse_symbols64(t_elf64 elf, t_symbol **lst) {
-  if (parse_symtab64(elf, lst) || parse_dynsym64(elf, lst)) {
+  if (parse_symtab(elf, lst) || parse_dynsym(elf, lst)) {
     clear_list(lst);
     return EXIT_FAILURE;
   }
