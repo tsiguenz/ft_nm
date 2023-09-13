@@ -90,6 +90,8 @@ int parse_symtab64(t_elf64 elf, t_symbol **lst) {
     Elf64_Addr value = symtab[i].st_value;
     char       type;
 
+    if (*name == '\0' && value == 0)
+      continue;
     if (set_type64(&type, symtab[i], elf) ||
         push_symbol(lst, name, value, type)) {
       clear_list(lst);
@@ -106,6 +108,8 @@ int parse_dynsym64(t_elf64 elf, t_symbol **lst) {
     Elf64_Addr value = dynsym[i].st_value;
     char       type;
 
+    if (*name == '\0' && value == 0)
+      continue;
     if (set_type64(&type, dynsym[i], elf) ||
         push_symbol(lst, name, value, type)) {
       clear_list(lst);
