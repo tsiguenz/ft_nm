@@ -8,6 +8,7 @@ int handle_elf64(char *file_name, uint8_t *map, off_t file_size) {
   if (parse_symbols64(elf, &lst))
     return EXIT_FAILURE;
   sort_default64(&lst);
+  delete_duplicates_symbols(&lst);
   print_symbols64(lst);
   // print_symtab_x64(elf);
   // print_dynsym_x64(elf);

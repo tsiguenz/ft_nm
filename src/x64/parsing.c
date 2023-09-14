@@ -96,9 +96,23 @@ static int is_fini_section(Elf64_Shdr section, t_elf64 elf) {
                      ft_strlen(section_name));
 }
 
+static int is_fini_array_section(Elf64_Shdr section, t_elf64 elf) {
+  const char *section_name = ".fini_array";
+  return section.sh_type == SHT_FINI_ARRAY &&
+         !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
+                     ft_strlen(section_name));
+}
+
 static int is_init_section(Elf64_Shdr section, t_elf64 elf) {
   const char *section_name = ".init";
   return section.sh_type == SHT_PROGBITS &&
+         !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
+                     ft_strlen(section_name));
+}
+
+static int is_init_array_section(Elf64_Shdr section, t_elf64 elf) {
+  const char *section_name = ".init_array";
+  return section.sh_type == SHT_INIT_ARRAY &&
          !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
                      ft_strlen(section_name));
 }
@@ -110,25 +124,45 @@ static int is_bss_section(Elf64_Shdr section, t_elf64 elf) {
                      ft_strlen(section_name));
 }
 
+static int is_dynamic_section(Elf64_Shdr section, t_elf64 elf) {
+  const char *section_name = ".dynamic";
+  return section.sh_type == SHT_DYNAMIC &&
+         !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
+                     ft_strlen(section_name));
+}
+
+static int is_got_section(Elf64_Shdr section, t_elf64 elf) {
+  const char *section_name = ".got";
+  return section.sh_type == SHT_PROGBITS &&
+         !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
+                     ft_strlen(section_name));
+}
+
+int is_readonly_section(Elf64_Shdr section) {
+  return section.sh_flags != SHF_WRITE;
+}
+
 static int set_type(char *type, Elf64_Sym symbol, t_elf64 elf,
                     char *symbol_name) {
   (void) symbol_name;
-  char       st_bind      = ELF64_ST_BIND(symbol.st_info);
-  char       st_type      = ELF64_ST_TYPE(symbol.st_info);
-  char       shndx        = symbol.st_shndx;
-  Elf64_Shdr section      = {0};
-  char       is_read_only = 0;
+  char       st_bind = ELF64_ST_BIND(symbol.st_info);
+  char       st_type = ELF64_ST_TYPE(symbol.st_info);
+  char       shndx   = symbol.st_shndx;
+  Elf64_Shdr section = {0};
 
-  (void) is_read_only;
-  ft_printf("%s type: %d shndx: %d st_bind: %d\n", symbol_name, st_type, shndx,
-            st_bind);
+  // ft_printf("%s type: %d shndx: %d st_bind: %d\n",  //
+  // symbol_name, st_type, shndx, st_bind);
   *type = '?';
+  if (is_readonly_section(section))
+    *type = 'r';
   if (get_section_by_index64(&section, shndx, elf))
     *type = 'u';
   if (is_text_section(section, elf) || is_init_section(section, elf) ||
       is_fini_section(section, elf))
     *type = 't';
-  if (is_data_section(section, elf))
+  if (is_data_section(section, elf) || is_fini_array_section(section, elf) ||
+      is_init_array_section(section, elf) || is_got_section(section, elf) ||
+      is_dynamic_section(section, elf))
     *type = 'd';
   if (is_bss_section(section, elf))
     *type = 'b';
@@ -136,13 +170,27 @@ static int set_type(char *type, Elf64_Sym symbol, t_elf64 elf,
     *type = 'a';
   if (st_bind == STB_WEAK)
     *type = 'w';
-  if (st_bind != STB_GLOBAL && st_bind != STB_LOCAL) {
-    // TODO: handle error here
-    return EXIT_SUCCESS;
-  }
   if (st_bind == STB_GLOBAL && *type != '?')
     *type -= 32;
   return EXIT_SUCCESS;
+}
+
+void delete_duplicates_symbols(t_symbol **lst) {
+  t_symbol *tmp = *lst;
+
+  // delete tmp instead of next
+  while (tmp && tmp->next) {
+    t_symbol *next = tmp->next;
+    if (!ft_strlen(tmp->name)) {
+      tmp = tmp->next;
+      continue;
+    }
+    if (!ft_strncmp(tmp->name, next->name, ft_strlen(tmp->name))) {
+      tmp->next = next->next;
+      free(next);
+    }
+    tmp = tmp->next;
+  }
 }
 
 static int parse_symtab(t_elf64 elf, t_symbol **lst) {
