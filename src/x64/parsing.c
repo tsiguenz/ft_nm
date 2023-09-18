@@ -82,7 +82,7 @@ void delete_duplicates_symbols(t_symbol **lst) {
       next->prev      = tmp->prev;
       free(tmp);
     }
-    tmp = tmp->next;
+    tmp = next;
   }
 }
 

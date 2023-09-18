@@ -34,16 +34,33 @@ void print_value64(Elf64_Addr value, t_symbol symbol) {
     nb_char++;
   }
   int   padding_size = 16 - nb_char;
-  char *padding      = malloc(padding_size * sizeof(char));
+  char *padding      = malloc((padding_size + 1) * sizeof(char));
+  if (!padding)
+    return;
   ft_memset(padding, '0', padding_size);
+  padding[padding_size] = '\0';
   ft_printf("%s%x", padding, value);
   free(padding);
 }
 
-void print_symbols64(t_symbol *lst) {
+void print_symbols64(t_symbol *lst, char debug) {
   while (lst) {
-    print_value64(lst->value, *lst);
-    ft_printf(" %c %s\n", lst->type, lst->name);
+    if (debug || !(ft_tolower(lst->type) == 'a')) {
+      print_value64(lst->value, *lst);
+      ft_printf(" %c %s\n", lst->type, lst->name);
+    }
     lst = lst->next;
+  }
+}
+
+void reverse_print_symbols64(t_symbol *lst, char debug) {
+  while (lst->next)
+    lst = lst->next;
+  while (lst) {
+    if (debug || !(ft_tolower(lst->type) == 'a')) {
+      print_value64(lst->value, *lst);
+      ft_printf(" %c %s\n", lst->type, lst->name);
+    }
+    lst = lst->prev;
   }
 }
