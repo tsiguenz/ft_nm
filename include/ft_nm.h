@@ -16,6 +16,7 @@ typedef struct s_symbol {
   Elf64_Addr       value;
   char             type;
   struct s_symbol *next;
+  struct s_symbol *prev;
 } t_symbol;
 
 typedef struct s_elf64 {
@@ -67,6 +68,7 @@ void print_symbols64(t_symbol *lst);
 void clear_list(t_symbol **lst);
 void sort_default64(t_symbol **lst);
 void delete_duplicates_symbols(t_symbol **lst);
+int  set_type(char *type, Elf64_Sym symbol, t_elf64 elf);
 
 // 32 bits
 int  handle_elf32(char *file_name, uint8_t *map, off_t file_size);

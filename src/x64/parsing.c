@@ -45,6 +45,7 @@ int push_symbol(t_symbol **lst, char *name, Elf64_Addr value, char type) {
   new->value = value;
   new->type  = type;
   new->next  = NULL;
+  new->prev  = NULL;
   if (!*lst) {
     *lst = new;
     return EXIT_SUCCESS;
@@ -52,6 +53,7 @@ int push_symbol(t_symbol **lst, char *name, Elf64_Addr value, char type) {
   while (tmp->next)
     tmp = tmp->next;
   tmp->next = new;
+  new->prev = tmp;
   return EXIT_SUCCESS;
 }
 
@@ -68,126 +70,17 @@ void clear_list(t_symbol **lst) {
   *lst = NULL;
 }
 
-int get_section_by_index64(Elf64_Shdr *section, int index, t_elf64 elf) {
-  if (index < 1 || index >= elf.header->e_shnum)
-    return EXIT_FAILURE;
-  *section = elf.sections[index];
-  return EXIT_SUCCESS;
-}
-
-static int is_data_section(Elf64_Shdr section, t_elf64 elf) {
-  const char *section_name = ".data";
-  return section.sh_type == SHT_PROGBITS &&
-         !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
-                     ft_strlen(section_name));
-}
-
-static int is_text_section(Elf64_Shdr section, t_elf64 elf) {
-  const char *section_name = ".text";
-  return section.sh_type == SHT_PROGBITS &&
-         !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
-                     ft_strlen(section_name));
-}
-
-static int is_fini_section(Elf64_Shdr section, t_elf64 elf) {
-  const char *section_name = ".fini";
-  return section.sh_type == SHT_PROGBITS &&
-         !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
-                     ft_strlen(section_name));
-}
-
-static int is_fini_array_section(Elf64_Shdr section, t_elf64 elf) {
-  const char *section_name = ".fini_array";
-  return section.sh_type == SHT_FINI_ARRAY &&
-         !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
-                     ft_strlen(section_name));
-}
-
-static int is_init_section(Elf64_Shdr section, t_elf64 elf) {
-  const char *section_name = ".init";
-  return section.sh_type == SHT_PROGBITS &&
-         !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
-                     ft_strlen(section_name));
-}
-
-static int is_init_array_section(Elf64_Shdr section, t_elf64 elf) {
-  const char *section_name = ".init_array";
-  return section.sh_type == SHT_INIT_ARRAY &&
-         !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
-                     ft_strlen(section_name));
-}
-
-static int is_bss_section(Elf64_Shdr section, t_elf64 elf) {
-  const char *section_name = ".bss";
-  return section.sh_type == SHT_NOBITS &&
-         !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
-                     ft_strlen(section_name));
-}
-
-static int is_dynamic_section(Elf64_Shdr section, t_elf64 elf) {
-  const char *section_name = ".dynamic";
-  return section.sh_type == SHT_DYNAMIC &&
-         !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
-                     ft_strlen(section_name));
-}
-
-static int is_got_section(Elf64_Shdr section, t_elf64 elf) {
-  const char *section_name = ".got";
-  return section.sh_type == SHT_PROGBITS &&
-         !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
-                     ft_strlen(section_name));
-}
-
-int is_readonly_section(Elf64_Shdr section) {
-  return section.sh_flags != SHF_WRITE;
-}
-
-static int set_type(char *type, Elf64_Sym symbol, t_elf64 elf,
-                    char *symbol_name) {
-  (void) symbol_name;
-  char       st_bind = ELF64_ST_BIND(symbol.st_info);
-  char       st_type = ELF64_ST_TYPE(symbol.st_info);
-  char       shndx   = symbol.st_shndx;
-  Elf64_Shdr section = {0};
-
-  // ft_printf("%s type: %d shndx: %d st_bind: %d\n",  //
-  // symbol_name, st_type, shndx, st_bind);
-  *type = '?';
-  if (is_readonly_section(section))
-    *type = 'r';
-  if (get_section_by_index64(&section, shndx, elf))
-    *type = 'u';
-  if (is_text_section(section, elf) || is_init_section(section, elf) ||
-      is_fini_section(section, elf))
-    *type = 't';
-  if (is_data_section(section, elf) || is_fini_array_section(section, elf) ||
-      is_init_array_section(section, elf) || is_got_section(section, elf) ||
-      is_dynamic_section(section, elf))
-    *type = 'd';
-  if (is_bss_section(section, elf))
-    *type = 'b';
-  if (st_type == STT_FILE)
-    *type = 'a';
-  if (st_bind == STB_WEAK)
-    *type = 'w';
-  if (st_bind == STB_GLOBAL && *type != '?')
-    *type -= 32;
-  return EXIT_SUCCESS;
-}
-
 void delete_duplicates_symbols(t_symbol **lst) {
   t_symbol *tmp = *lst;
 
-  // delete tmp instead of next
   while (tmp && tmp->next) {
     t_symbol *next = tmp->next;
-    if (!ft_strlen(tmp->name)) {
-      tmp = tmp->next;
-      continue;
-    }
-    if (!ft_strncmp(tmp->name, next->name, ft_strlen(tmp->name))) {
-      tmp->next = next->next;
-      free(next);
+    if (ft_strlen(tmp->name) && ft_tolower(tmp->type) != 'a' &&
+        ft_tolower(tmp->type) != 't' &&
+        !ft_strncmp(tmp->name, next->name, ft_strlen(tmp->name))) {
+      tmp->prev->next = next;
+      next->prev      = tmp->prev;
+      free(tmp);
     }
     tmp = tmp->next;
   }
@@ -200,7 +93,7 @@ static int parse_symtab(t_elf64 elf, t_symbol **lst) {
     Elf64_Addr value = symtab[i].st_value;
     char       type;
 
-    if (set_type(&type, symtab[i], elf, name) ||
+    if (set_type(&type, symtab[i], elf) ||
         push_symbol(lst, name, value, type)) {
       clear_list(lst);
       return EXIT_FAILURE;
@@ -218,7 +111,7 @@ static int parse_dynsym(t_elf64 elf, t_symbol **lst) {
 
     if (*name == '\0' && value == 0)
       continue;
-    if (set_type(&type, dynsym[i], elf, name) ||
+    if (set_type(&type, dynsym[i], elf) ||
         push_symbol(lst, name, value, type)) {
       clear_list(lst);
       return EXIT_FAILURE;
