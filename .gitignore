@@ -17,3 +17,4 @@ ft_nm_test
 *.[ao]
 a.out
 .nfs*
+*.test*

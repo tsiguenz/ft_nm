@@ -7,7 +7,7 @@ DIFF_FILE="diff.tests"
 run_test() {
 	./ft_nm "$1" > .a
 	nm "$1" > .b
-	diff .a .b > $DIFF_FILE && echo "OK" || echo "ERROR $1"
+	diff .a .b > $DIFF_FILE && echo "\e[32mOK\e[0m" || echo "\e[31mERROR $1\e[0m"
 	rm -rf .a .b
 	if [ -s $DIFF_FILE ]; then
 		exit 1
