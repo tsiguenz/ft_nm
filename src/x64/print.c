@@ -22,8 +22,8 @@ void print_dynsym_x64(t_elf64 elf) {
   }
 }
 
-void print_value64(Elf64_Addr value, t_symbol symbol) {
-  if (!value && ft_tolower(symbol.type) != 'a') {
+static void print_value64(Elf64_Addr value, t_symbol symbol) {
+  if (ft_tolower(symbol.type) == 'u' || symbol.type == 'w') {
     ft_printf("                ");
     return;
   }
@@ -43,9 +43,11 @@ void print_value64(Elf64_Addr value, t_symbol symbol) {
   free(padding);
 }
 
+static int is_debug_symbol(char type) { return ft_tolower(type) == 'a'; }
+
 void print_symbols64(t_symbol *lst, char debug) {
   while (lst) {
-    if (debug || !(ft_tolower(lst->type) == 'a')) {
+    if (debug || !is_debug_symbol(lst->type)) {
       print_value64(lst->value, *lst);
       ft_printf(" %c %s\n", lst->type, lst->name);
     }
@@ -57,7 +59,7 @@ void reverse_print_symbols64(t_symbol *lst, char debug) {
   while (lst->next)
     lst = lst->next;
   while (lst) {
-    if (debug || !(ft_tolower(lst->type) == 'a')) {
+    if (debug || !is_debug_symbol(lst->type)) {
       print_value64(lst->value, *lst);
       ft_printf(" %c %s\n", lst->type, lst->name);
     }

@@ -70,6 +70,13 @@ static int is_got_section(Elf64_Shdr section, t_elf64 elf) {
                      ft_strlen(section_name));
 }
 
+static int is_tm_clone_table(Elf64_Shdr section, t_elf64 elf) {
+  const char *section_name = ".tm_clone_table";
+  return section.sh_type == SHT_PROGBITS &&
+         !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
+                     ft_strlen(section_name));
+}
+
 static int is_readonly_section(Elf64_Shdr section) {
   return section.sh_flags != SHF_WRITE;
 }
@@ -77,6 +84,13 @@ static int is_readonly_section(Elf64_Shdr section) {
 static int is_debug_section(Elf64_Shdr section, t_elf64 elf) {
   const char *section_name = ".debug";
   return section.sh_type == SHT_PROGBITS &&
+         !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
+                     ft_strlen(section_name));
+}
+
+static int is_group_section(Elf64_Shdr section, t_elf64 elf) {
+  const char *section_name = ".group";
+  return section.sh_type == SHT_GROUP &&
          !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
                      ft_strlen(section_name));
 }
@@ -112,7 +126,7 @@ static void set_t(Elf64_Shdr section, t_elf64 elf, char *type) {
 static void set_d(Elf64_Shdr section, t_elf64 elf, char *type) {
   if (is_data_section(section, elf) || is_fini_array_section(section, elf) ||
       is_init_array_section(section, elf) || is_got_section(section, elf) ||
-      is_dynamic_section(section, elf))
+      is_dynamic_section(section, elf) || is_tm_clone_table(section, elf))
     *type = 'd';
 }
 
@@ -121,10 +135,14 @@ static void set_b(Elf64_Shdr section, t_elf64 elf, char *type) {
     *type = 'b';
 }
 
-// in progress
 static void set_N(Elf64_Shdr section, t_elf64 elf, char *type) {
   if (is_debug_section(section, elf))
     *type = 'N';
+}
+
+static void set_n(Elf64_Shdr section, t_elf64 elf, char *type) {
+  if (is_group_section(section, elf))
+    *type = 'n';
 }
 
 static void set_global(char st_bind, char *type) {
@@ -147,6 +165,7 @@ int set_type(char *type, Elf64_Sym symbol, t_elf64 elf) {
   set_d(section, elf, type);
   set_b(section, elf, type);
   set_N(section, elf, type);
+  set_n(section, elf, type);
   set_a(st_type, type);
   set_w(st_bind, shndx, type);
   set_global(st_bind, type);
