@@ -74,6 +74,13 @@ static int is_readonly_section(Elf64_Shdr section) {
   return section.sh_flags != SHF_WRITE;
 }
 
+static int is_debug_section(Elf64_Shdr section, t_elf64 elf) {
+  const char *section_name = ".debug";
+  return section.sh_type == SHT_PROGBITS &&
+         !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
+                     ft_strlen(section_name));
+}
+
 static void set_r(Elf64_Shdr section, char *type) {
   if (is_readonly_section(section))
     *type = 'r';
@@ -113,6 +120,13 @@ static void set_b(Elf64_Shdr section, t_elf64 elf, char *type) {
   if (is_bss_section(section, elf))
     *type = 'b';
 }
+
+// in progress
+static void set_N(Elf64_Shdr section, t_elf64 elf, char *type) {
+  if (is_debug_section(section, elf))
+    *type = 'N';
+}
+
 static void set_global(char st_bind, char *type) {
   if (st_bind == STB_GLOBAL && *type != '?')
     *type = ft_toupper(*type);
@@ -124,8 +138,7 @@ int set_type(char *type, Elf64_Sym symbol, t_elf64 elf) {
   char       shndx   = symbol.st_shndx;
   Elf64_Shdr section = {0};
 
-  // ft_printf("%s type: %d shndx: %d st_bind: %d\n",
-  // symbol_name, st_type, shndx, st_bind);
+  // ft_printf(" type: %d shndx: %d st_bind: %d\n", st_type, shndx, st_bind);
   *type = '?';
   set_section_by_index64(&section, shndx, elf);
   set_r(section, type);
@@ -133,6 +146,7 @@ int set_type(char *type, Elf64_Sym symbol, t_elf64 elf) {
   set_t(section, elf, type);
   set_d(section, elf, type);
   set_b(section, elf, type);
+  set_N(section, elf, type);
   set_a(st_type, type);
   set_w(st_bind, shndx, type);
   set_global(st_bind, type);
