@@ -1,5 +1,8 @@
 # TODO
 
+- why my nm return symbols and real nm say no symbols
+- why I have symbols who are not present in nm output (libasan.so)
+
 ## Test cases
 
 ### Functional tests

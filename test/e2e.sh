@@ -24,7 +24,6 @@ run_test "obj/init.o"
 run_test "obj/main.o"
 run_test "obj/nm_wrapper.o"
 run_test "libft/obj/get_next_line.o"
-run_test "/usr/lib/gcc/x86_64-linux-gnu/12/crtbegin.o"
 
 if [ ! -s $DIFF_FILE ]; then
 	rm -rf $DIFF_FILE

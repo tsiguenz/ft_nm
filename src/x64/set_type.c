@@ -180,7 +180,7 @@ int set_type(char *type, Elf64_Sym symbol, t_elf64 elf) {
   set_a(st_type, type);
   set_w(st_bind, st_type, shndx, type);
   set_v(st_bind, st_type, shndx, type);
-  // handle c g i P r
+  // handle c g i P
   set_global(st_bind, type);
   return EXIT_SUCCESS;
 }
