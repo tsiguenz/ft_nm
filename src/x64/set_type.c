@@ -56,6 +56,13 @@ static int is_bss_section(Elf64_Shdr section, t_elf64 elf) {
                      ft_strlen(section_name));
 }
 
+static int is_tbss_section(Elf64_Shdr section, t_elf64 elf) {
+  const char *section_name = ".tbss";
+  return section.sh_type == SHT_NOBITS &&
+         !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
+                     ft_strlen(section_name));
+}
+
 static int is_dynamic_section(Elf64_Shdr section, t_elf64 elf) {
   const char *section_name = ".dynamic";
   return section.sh_type == SHT_DYNAMIC &&
@@ -103,11 +110,16 @@ static void set_a(char st_type, char *type) {
     *type = 'a';
 }
 
-static void set_w(char st_bind, char shndx, char *type) {
-  if (st_bind == STB_WEAK)
+static void set_w(char st_bind, char st_type, char shndx, char *type) {
+  if (st_bind == STB_WEAK && st_type != STT_OBJECT)
     *type = 'w';
-  if (st_bind == STB_WEAK && shndx != SHN_UNDEF)
+  if (st_bind == STB_WEAK && shndx != SHN_UNDEF && st_type != STT_OBJECT)
     *type = 'W';
+}
+
+static void set_v(char st_bind, char st_type, char shndx, char *type) {
+  if (st_bind == STB_WEAK && shndx == SHN_UNDEF && st_type == STT_OBJECT)
+    *type = 'v';
 }
 
 static void set_u(char shndx, char *type) {
@@ -129,7 +141,7 @@ static void set_d(Elf64_Shdr section, t_elf64 elf, char *type) {
 }
 
 static void set_b(Elf64_Shdr section, t_elf64 elf, char *type) {
-  if (is_bss_section(section, elf))
+  if (is_bss_section(section, elf) || is_tbss_section(section, elf))
     *type = 'b';
 }
 
@@ -166,7 +178,9 @@ int set_type(char *type, Elf64_Sym symbol, t_elf64 elf) {
   set_b(section, elf, type);
   set_N(section, elf, type);
   set_a(st_type, type);
-  set_w(st_bind, shndx, type);
+  set_w(st_bind, st_type, shndx, type);
+  set_v(st_bind, st_type, shndx, type);
+  // handle c g i P r
   set_global(st_bind, type);
   return EXIT_SUCCESS;
 }

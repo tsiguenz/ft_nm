@@ -70,16 +70,30 @@ void clear_list(t_symbol **lst) {
   *lst = NULL;
 }
 
+static int is_duplicate_symbol(t_symbol *tmp, t_symbol *next) {
+  int tmp_len = ft_strlen(tmp->name);
+  int tmp_equal_to_next =
+      ft_strlen(tmp->name) && !ft_strncmp(tmp->name, next->name, tmp_len);
+  int next_char_is_end_or_arobase =
+      (tmp->name[tmp_len] == '\0' &&
+       (next->name[tmp_len] == '\0' || next->name[tmp_len] == '@'));
+  int value_is_same = tmp->value == next->value;
+
+  return tmp_equal_to_next && next_char_is_end_or_arobase && value_is_same;
+}
+
 void delete_duplicates_symbols(t_symbol **lst) {
   t_symbol *tmp = *lst;
 
   while (tmp && tmp->next) {
     t_symbol *next = tmp->next;
-    if (ft_strlen(tmp->name) && ft_tolower(tmp->type) != 'a' &&
-        ft_tolower(tmp->type) != 't' &&
-        !ft_strncmp(tmp->name, next->name, ft_strlen(tmp->name))) {
-      tmp->prev->next = next;
-      next->prev      = tmp->prev;
+    // ft_printf("%s -> %s -> %p\n", tmp->name, next->name, tmp->prev);
+    if (is_duplicate_symbol(tmp, next)) {
+      if (tmp == *lst)
+        *lst = next;
+      else
+        tmp->prev->next = next;
+      next->prev = tmp->prev;
       free(tmp);
     }
     tmp = next;

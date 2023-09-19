@@ -23,7 +23,8 @@ void print_dynsym_x64(t_elf64 elf) {
 }
 
 static void print_value64(Elf64_Addr value, t_symbol symbol) {
-  if (ft_tolower(symbol.type) == 'u' || symbol.type == 'w') {
+  if (ft_tolower(symbol.type) == 'u' || symbol.type == 'w' ||
+      symbol.type == 'v') {
     ft_printf("                ");
     return;
   }
