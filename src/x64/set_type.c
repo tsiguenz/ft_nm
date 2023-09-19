@@ -88,11 +88,9 @@ static int is_debug_section(Elf64_Shdr section, t_elf64 elf) {
                      ft_strlen(section_name));
 }
 
-static int is_group_section(Elf64_Shdr section, t_elf64 elf) {
-  const char *section_name = ".group";
-  return section.sh_type == SHT_GROUP &&
-         !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
-                     ft_strlen(section_name));
+static int is_code_section(Elf64_Shdr section, char st_type) {
+  return section.sh_type == SHT_PROGBITS || st_type == STT_FUNC ||
+         st_type == STT_OBJECT;
 }
 
 static void set_r(Elf64_Shdr section, char *type) {
@@ -140,8 +138,9 @@ static void set_N(Elf64_Shdr section, t_elf64 elf, char *type) {
     *type = 'N';
 }
 
-static void set_n(Elf64_Shdr section, t_elf64 elf, char *type) {
-  if (is_group_section(section, elf))
+static void set_n(Elf64_Shdr section, char st_type, t_elf64 elf, char *type) {
+  if (!is_debug_section(section, elf) && !is_data_section(section, elf) &&
+      !is_code_section(section, st_type) && is_readonly_section(section))
     *type = 'n';
 }
 
@@ -160,12 +159,12 @@ int set_type(char *type, Elf64_Sym symbol, t_elf64 elf) {
   *type = '?';
   set_section_by_index64(&section, shndx, elf);
   set_r(section, type);
+  set_n(section, st_type, elf, type);
   set_u(shndx, type);
   set_t(section, elf, type);
   set_d(section, elf, type);
   set_b(section, elf, type);
   set_N(section, elf, type);
-  set_n(section, elf, type);
   set_a(st_type, type);
   set_w(st_bind, shndx, type);
   set_global(st_bind, type);
