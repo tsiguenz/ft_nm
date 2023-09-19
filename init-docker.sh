@@ -15,7 +15,12 @@ fi
 if docker ps -a | grep -q ${CONTAINER_NAME}
 then
 	echo "Container already exist. Running it..."
-	docker start -i ${CONTAINER_NAME}
+	if docker ps | grep -q ${CONTAINER_NAME}
+	then
+		docker exec -it ${CONTAINER_NAME} bash
+	else
+		docker start -i ${CONTAINER_NAME}
+	fi
 else
 	docker run -it --mount type=bind,src="$(pwd)",target=/src --name ${CONTAINER_NAME} ${IMAGE_NAME}
 fi
