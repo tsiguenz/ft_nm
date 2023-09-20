@@ -1,6 +1,7 @@
 #include "include/test.h"
 
-int tests_run = 0;
+char *prog_name = "./ft_nm";
+int   tests_run = 0;
 
 static char *all_tests(void) {
   mu_run_test(set_fd_tests);

@@ -8,10 +8,10 @@ static void test_helper(char *filename, int *fd, off_t *file_size,
 }
 
 char *set_arch_tests(void) {
-  int fd = -1;
-  off_t file_size = 0;
-  uint8_t *map = 0;
-  char arch;
+  int      fd        = -1;
+  off_t    file_size = 0;
+  uint8_t *map       = 0;
+  char     arch;
 
   {
     char *filename = "test/bin/print42_x64";
@@ -28,14 +28,14 @@ char *set_arch_tests(void) {
     mu_assert(__FILE__ ": 32 bits elf arch value", arch == ELFCLASS32);
   }
   {
-    char *filename = "test/bin/elfclassnone";
+    char *filename = "test/bin/bad_files/elfclassnone";
     test_helper(filename, &fd, &file_size, &map);
     mu_assert(__FILE__ ": bad elf class ret value",
               set_arch(map, filename, &arch));
     mu_assert(__FILE__ ": bad elf class arch value", arch == ELFCLASSNONE);
   }
   {
-    char *filename = "test/bin/bad_elf_class";
+    char *filename = "test/bin/bad_files/bad_elf_class";
     test_helper(filename, &fd, &file_size, &map);
     mu_assert(__FILE__ ": another bad elf class ret value",
               set_arch(map, filename, &arch));

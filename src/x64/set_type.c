@@ -1,7 +1,6 @@
 #include <ft_nm.h>
 
-static void set_section_by_index64(Elf64_Shdr *section, int index,
-                                   t_elf64 elf) {
+static void set_section_by_index(Elf64_Shdr *section, int index, t_elf64 elf) {
   if (index < 1 || index >= elf.header->e_shnum)
     return;
   *section = elf.sections[index];
@@ -169,7 +168,7 @@ int set_type(char *type, Elf64_Sym symbol, t_elf64 elf) {
 
   // ft_printf(" type: %d shndx: %d st_bind: %d\n", st_type, shndx, st_bind);
   *type = '?';
-  set_section_by_index64(&section, shndx, elf);
+  set_section_by_index(&section, shndx, elf);
   set_r(section, type);
   set_n(section, st_type, elf, type);
   set_u(shndx, type);

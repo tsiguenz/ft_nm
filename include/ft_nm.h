@@ -9,7 +9,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#define PROG_NAME "ft_nm"
+extern char *prog_name;
 
 typedef struct s_symbol {
   char            *name;

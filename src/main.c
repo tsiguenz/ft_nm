@@ -2,7 +2,10 @@
 
 #include <ft_nm.h>
 
+char *prog_name;
+
 int main(int ac, char **av) {
+  prog_name = av[0];
   if (ac == 1)
     return nm_wrapper("a.out");
   int res = EXIT_SUCCESS;

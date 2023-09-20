@@ -8,9 +8,9 @@ static void test_helper(char *filename, int *fd, off_t *file_size,
 }
 
 char *check_format_tests(void) {
-  int fd = -1;
-  off_t file_size = 0;
-  uint8_t *map = 0;
+  int      fd        = -1;
+  off_t    file_size = 0;
+  uint8_t *map       = 0;
 
   {
     char *filename = "test/bin/print42_x64";
@@ -18,13 +18,13 @@ char *check_format_tests(void) {
     mu_assert(__FILE__ ": normal elf", !check_format(map, filename));
   }
   {
-    char *filename = "test/bin/elf_changed_to_ela";
+    char *filename = "test/bin/bad_files/elf_changed_to_ela";
     test_helper(filename, &fd, &file_size, &map);
     mu_assert(__FILE__ ": bad magic numbers (?ELF) elf",
               check_format(map, filename));
   }
   {
-    char *filename = "test/bin/42";
+    char *filename = "test/bin/bad_files/42";
     test_helper(filename, &fd, &file_size, &map);
     mu_assert(__FILE__ ": file with 2 chars", check_format(map, filename));
   }

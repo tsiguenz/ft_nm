@@ -13,5 +13,8 @@ int nm_wrapper(char *file_name) {
   else
     res = handle_elf64(file_name, map, file_size);
   munmap(map, file_size);
+  if (res)
+    ft_printf_fd(2, "%s: %s: file format not recognized\n", prog_name,
+                 file_name);
   return res;
 }
