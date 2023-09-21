@@ -20,11 +20,13 @@ run_test() {
 
 rm -rf diff.test
 
-#for line in $(ls -d "$PWD"/test/bin/bad_files/*);
-#	do run_test "$line";
-#done
+for line in $(ls -d "$PWD"/test/bin/bad_files/*);
+	do run_test "$line";
+done
+for line in $(ls -d "$PWD"/test/bin/ok_files/*);
+	do run_test "$line";
+done
 run_test "test"
-run_test "test/bin/print42_x64"
 run_test "obj/init.o"
 run_test "obj/main.o"
 run_test "obj/nm_wrapper.o"
