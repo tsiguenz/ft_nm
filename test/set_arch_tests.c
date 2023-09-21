@@ -14,14 +14,15 @@ char *set_arch_tests(void) {
   char     arch;
 
   {
-    char *filename = "test/bin/print42_x64";
+    char *filename = "test/bin/ok_files/print42_x64";
     test_helper(filename, &fd, &file_size, &map);
     mu_assert(__FILE__ ": 64 bits elf ret val",
               !set_arch(map, filename, &arch));
     mu_assert(__FILE__ ": 64 bits elf arch value", arch == ELFCLASS64);
   }
   {
-    char *filename = "test/bin/print42_x86_32";
+    // TODO: change file name when 32 bits was handled
+    char *filename = "test/bin/ok_files/.print42_x86_32";
     test_helper(filename, &fd, &file_size, &map);
     mu_assert(__FILE__ ": 32 bits elf ret val",
               !set_arch(map, filename, &arch));

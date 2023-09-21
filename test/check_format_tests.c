@@ -13,7 +13,7 @@ char *check_format_tests(void) {
   uint8_t *map       = 0;
 
   {
-    char *filename = "test/bin/print42_x64";
+    char *filename = "test/bin/ok_files/print42_x64";
     test_helper(filename, &fd, &file_size, &map);
     mu_assert(__FILE__ ": normal elf", !check_format(map, filename));
   }
