@@ -8,8 +8,8 @@ jobs:
         uses: actions/checkout@v3
       - name: Setup C/C++ Compiler
         uses: rlalik/setup-cpp-compiler@v1.2
-      - name: Re-install binutils
-        run: sudo apt-get install --reinstall binutils
+      - name: Install binutils
+        run: sudo apt-get install binutils
       - name: Run unit tests
         run: make test
       - name: Run fonctionnal tests
