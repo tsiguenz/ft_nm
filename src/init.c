@@ -2,8 +2,11 @@
 
 int set_fd(char *filename, int *fd) {
   *fd = open(filename, O_RDONLY);
-  if (*fd < 1)
+  if (*fd < 1) {
+    if (errno == ENOENT)
+      ft_printf_fd(2, "%s: '%s': No such file\n", prog_name, filename);
     return EXIT_FAILURE;
+  }
   return EXIT_SUCCESS;
 }
 

@@ -27,6 +27,7 @@ for line in $(ls -d "$PWD"/test/bin/ok_files/*);
 	do run_test "$line";
 done
 run_test "test"
+run_test "does_not_exist"
 run_test "obj/init.o"
 run_test "obj/main.o"
 run_test "obj/nm_wrapper.o"
