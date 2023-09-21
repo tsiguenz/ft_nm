@@ -6,8 +6,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Set local for nm sort
-        uses: export LC_ALL=C
       - name: Setup C/C++ Compiler
         uses: rlalik/setup-cpp-compiler@v1.2
       - name: Run unit tests
