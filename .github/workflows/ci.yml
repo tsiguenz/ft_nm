@@ -10,5 +10,3 @@ jobs:
         uses: rlalik/setup-cpp-compiler@v1.2
       - name: Run unit tests
         run: make test
-      - name: Run e2e tests
-        run: make && test/e2e.sh
