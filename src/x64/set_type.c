@@ -13,6 +13,13 @@ static int is_data_section(Elf64_Shdr section, t_elf64 elf) {
                      ft_strlen(section_name));
 }
 
+static int is_tdata_section(Elf64_Shdr section, t_elf64 elf) {
+  const char *section_name = ".tdata";
+  return section.sh_type == SHT_PROGBITS &&
+         !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
+                     ft_strlen(section_name));
+}
+
 static int is_text_section(Elf64_Shdr section, t_elf64 elf) {
   const char *section_name = ".text";
   return section.sh_type == SHT_PROGBITS &&
@@ -133,7 +140,8 @@ static void set_t(Elf64_Shdr section, t_elf64 elf, char *type) {
 }
 
 static void set_d(Elf64_Shdr section, t_elf64 elf, char *type) {
-  if (is_data_section(section, elf) || is_fini_array_section(section, elf) ||
+  if (is_data_section(section, elf) || is_tdata_section(section, elf) ||
+      is_fini_array_section(section, elf) ||
       is_init_array_section(section, elf) || is_got_section(section, elf) ||
       is_dynamic_section(section, elf) || is_tm_clone_table(section, elf))
     *type = 'd';

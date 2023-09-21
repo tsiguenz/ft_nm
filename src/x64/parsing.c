@@ -25,26 +25,35 @@ static int push_symbol(t_symbol **lst, char *name, Elf64_Addr value,
   return EXIT_SUCCESS;
 }
 
-static int is_duplicate_symbol(t_symbol *tmp, t_symbol *next) {
-  int tmp_len = ft_strlen(tmp->name);
-  int tmp_equal_to_next =
-      ft_strlen(tmp->name) && !ft_strncmp(tmp->name, next->name, tmp_len);
-  int next_char_is_end_or_arobase =
-      (tmp->name[tmp_len] == '\0' &&
-       (next->name[tmp_len] == '\0' || next->name[tmp_len] == '@'));
-  int value_is_same = tmp->value == next->value;
+// Symbol to be deleted is a
+static int is_duplicate_symbol(t_symbol *a, t_symbol *b) {
+  const char *useless_symbol_name = "program_invocation_short_name";
+  int         is_useless_symbol =
+      !ft_strncmp(useless_symbol_name, a->name, ft_strlen(useless_symbol_name));
+  int a_len        = ft_strlen(a->name);
+  int a_equal_to_b = ft_strlen(a->name) && !ft_strncmp(a->name, b->name, a_len);
+  int b_char_is_end_or_arobase =
+      (a->name[a_len] == '\0' &&
+       (b->name[a_len] == '\0' || b->name[a_len] == '@'));
+  int value_is_same = a->value == b->value;
 
-  return tmp_equal_to_next && next_char_is_end_or_arobase && value_is_same;
+  return is_useless_symbol ||
+         (a_equal_to_b && b_char_is_end_or_arobase && value_is_same);
 }
 
 static int parse_symtab(t_elf64 elf, t_symbol **lst) {
   Elf64_Sym *symtab = elf.symtab;
   for (uint64_t i = 1; i < elf.symtab_size / sizeof(Elf64_Sym); i++) {
-    uint32_t   name_index = symtab[i].st_name;
-    char      *name       = elf.strtab + name_index;
-    Elf64_Addr value      = symtab[i].st_value;
-    char       type;
+    const uint32_t   name_index = symtab[i].st_name;
+    const Elf64_Addr value      = symtab[i].st_value;
+    char             type;
+    char            *name;
 
+    if (elf.strtab + name_index > (char *) (elf.map + elf.file_size)) {
+      clear_list(lst);
+      return EXIT_FAILURE;
+    }
+    name = elf.strtab + name_index;
     if (*name == '\0' && value <= 0)
       continue;
     if (set_type(&type, symtab[i], elf) ||
@@ -59,10 +68,16 @@ static int parse_symtab(t_elf64 elf, t_symbol **lst) {
 static int parse_dynsym(t_elf64 elf, t_symbol **lst) {
   Elf64_Sym *dynsym = elf.dynsym;
   for (uint64_t i = 1; i < elf.dynsym_size / sizeof(Elf64_Sym); i++) {
-    char      *name  = elf.dynstr + dynsym[i].st_name;
-    Elf64_Addr value = dynsym[i].st_value;
-    char       type;
+    const uint32_t   name_index = dynsym[i].st_name;
+    const Elf64_Addr value      = dynsym[i].st_value;
+    char             type;
+    char            *name;
 
+    if (elf.dynstr + name_index > (char *) (elf.map + elf.file_size)) {
+      clear_list(lst);
+      return EXIT_FAILURE;
+    }
+    name = elf.dynstr + name_index;
     if (*name == '\0' && value <= 0)
       continue;
     if (set_type(&type, dynsym[i], elf) ||
@@ -99,28 +114,30 @@ int set_elf64_infos(t_elf64 *elf, uint8_t *map, char *file_name,
     const uint32_t   section_name_index = current_section.sh_name;
     const uint32_t   section_offset     = current_section.sh_offset;
     const char      *section_name       = elf->shstrtab + section_name_index;
+    const uint32_t   section_type       = current_section.sh_type;
 
-    if (section_size > (uint64_t) file_size ||
+    if ((section_type != SHT_NOBITS && section_size > (uint64_t) file_size) ||
         section_name_index > (uint32_t) file_size ||
-        section_offset > (uint32_t) file_size)
+        section_offset > (uint32_t) file_size) {
       return EXIT_FAILURE;
+    }
 
     if (!ft_strncmp(".symtab", section_name, ft_strlen(".symtab")) &&
-        elf->sections[i].sh_type == SHT_SYMTAB) {
+        section_type == SHT_SYMTAB) {
       elf->symtab      = (Elf64_Sym *) (map + section_offset);
       elf->symtab_size = section_size;
     }
     if (!ft_strncmp(".strtab", section_name, ft_strlen(".strtab")) &&
-        elf->sections[i].sh_type == SHT_STRTAB) {
+        section_type == SHT_STRTAB) {
       elf->strtab = (char *) (map + section_offset);
     }
     if (!ft_strncmp(".dynsym", section_name, ft_strlen(".dynsym")) &&
-        elf->sections[i].sh_type == SHT_DYNSYM) {
+        section_type == SHT_DYNSYM) {
       elf->dynsym      = (Elf64_Sym *) (map + section_offset);
       elf->dynsym_size = section_size;
     }
     if (!ft_strncmp(".dynstr", section_name, ft_strlen(".dynstr")) &&
-        elf->sections[i].sh_type == SHT_STRTAB) {
+        section_type == SHT_STRTAB) {
       elf->dynstr = (char *) (map + section_offset);
     }
   }
@@ -146,19 +163,27 @@ void clear_list(t_symbol **lst) {
 }
 
 void delete_duplicates_symbols(t_symbol **lst) {
-  t_symbol *tmp = *lst;
+  t_symbol *current = *lst;
+  t_symbol *tmp;
 
-  while (tmp && tmp->next) {
-    t_symbol *next = tmp->next;
-    if (is_duplicate_symbol(tmp, next)) {
-      if (tmp == *lst)
-        *lst = next;
-      else
-        tmp->prev->next = next;
-      next->prev = tmp->prev;
-      free(tmp);
+  while (current) {
+    tmp = *lst;
+    while (tmp) {
+      t_symbol *next = tmp->next;
+      if (current != tmp && is_duplicate_symbol(tmp, current)) {
+        if (tmp == *lst) {
+          *lst         = tmp->next;
+          (*lst)->prev = NULL;
+        } else {
+          tmp->prev->next = tmp->next;
+          if (tmp->next)
+            tmp->next->prev = tmp->prev;
+        }
+        free(tmp);
+      }
+      tmp = next;
     }
-    tmp = next;
+    current = current->next;
   }
 }
 

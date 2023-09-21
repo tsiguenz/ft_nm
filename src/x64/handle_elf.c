@@ -9,8 +9,9 @@ int handle_elf64(char *file_name, uint8_t *map, off_t file_size) {
   if (set_elf64_infos(&elf, map, file_name, file_size) ||
       parse_symbols64(elf, &lst))
     return EXIT_FAILURE;
-  sort_default64(&lst);
+  //print_all_symbols_name(lst);
   delete_duplicates_symbols(&lst);
+  sort_default64(&lst);
   print_symbols64(lst, debug);
   //  reverse_print_symbols64(lst, debug);
   //  print_dynsym_x64(elf);

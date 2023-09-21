@@ -46,6 +46,13 @@ static void print_value(Elf64_Addr value, t_symbol symbol) {
 
 static int is_debug_symbol(char type) { return ft_tolower(type) == 'a'; }
 
+void print_all_symbols_name(t_symbol *lst) {
+  while (lst) {
+    ft_printf("%s\n", lst->name);
+    lst = lst->next;
+  }
+}
+
 void print_symbols64(t_symbol *lst, char debug) {
   while (lst) {
     if (debug || !is_debug_symbol(lst->type)) {
