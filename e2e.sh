@@ -14,6 +14,7 @@ run_test() {
 		|| printf "\e[31m%-50s : [KO]\e[0m\n" "$1"
 	rm -rf .a .b .tmp
 	if [ -s $DIFF_FILE ]; then
+		cat $DIFF_FILE
 		exit 1
 	fi
 }
