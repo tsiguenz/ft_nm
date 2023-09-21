@@ -6,10 +6,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Install nm
-        uses: sudo apt-get install -y binutils
       - name: Setup C/C++ Compiler
         uses: rlalik/setup-cpp-compiler@v1.2
+      - name: Install nm
+        uses: sudo apt-get install -y binutils
       - name: Run unit tests
         run: make test
       - name: Run fonctionnal tests
