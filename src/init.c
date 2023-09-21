@@ -2,10 +2,8 @@
 
 int set_fd(char *filename, int *fd) {
   *fd = open(filename, O_RDONLY);
-  if (*fd < 1) {
-    ft_printf_fd(2, "%s: '%s': No such file\n", prog_name, filename);
+  if (*fd < 1)
     return EXIT_FAILURE;
-  }
   return EXIT_SUCCESS;
 }
 
@@ -13,7 +11,7 @@ int set_file_size(char *filename, int fd, off_t *file_size) {
   struct stat fs;
 
   if (fstat(fd, &fs) == -1) {
-    ft_printf_fd(2, "%s: error: fstat fail\n", prog_name);
+    ft_printf_fd(2, "%s: error: %s\n", prog_name, strerror(errno));
     close(fd);
     return EXIT_FAILURE;
   }
@@ -32,7 +30,7 @@ int set_mapped_file(int fd, off_t file_size, uint8_t **map) {
   *map = mmap(NULL, file_size, PROT_READ, MAP_PRIVATE, fd, 0);
   close(fd);
   if (map == MAP_FAILED) {
-    ft_printf_fd(2, "%s: error: mmap fail\n", prog_name);
+    ft_printf_fd(2, "%s: error: %s\n", prog_name, strerror(errno));
     return EXIT_FAILURE;
   }
   return EXIT_SUCCESS;

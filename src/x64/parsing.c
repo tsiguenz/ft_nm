@@ -1,5 +1,7 @@
 #include <ft_nm.h>
 
+char file_is_stripped = 0;
+
 static int push_symbol(t_symbol **lst, char *name, Elf64_Addr value,
                        char type) {
   t_symbol *tmp = *lst;
@@ -121,6 +123,11 @@ int set_elf64_infos(t_elf64 *elf, uint8_t *map, char *file_name,
         elf->sections[i].sh_type == SHT_STRTAB) {
       elf->dynstr = (char *) (map + section_offset);
     }
+  }
+  if (!elf->symtab) {
+    ft_printf_fd(2, "%s: %s: no symbols\n", prog_name, file_name);
+    file_is_stripped = 1;
+    return EXIT_FAILURE;
   }
   return EXIT_SUCCESS;
 }

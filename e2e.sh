@@ -31,6 +31,7 @@ run_test "obj/init.o"
 run_test "obj/main.o"
 run_test "obj/nm_wrapper.o"
 run_test "libft/obj/get_next_line.o"
+run_test "/lib64/ld-linux-x86-64.so.2"
 
 if [ ! -s $DIFF_FILE ]; then
 	rm -rf $DIFF_FILE

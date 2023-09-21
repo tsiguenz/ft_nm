@@ -12,9 +12,9 @@ int handle_elf64(char *file_name, uint8_t *map, off_t file_size) {
   sort_default64(&lst);
   delete_duplicates_symbols(&lst);
   print_symbols64(lst, debug);
-  // reverse_print_symbols64(lst, debug);
-  // print_dynsym_x64(elf);
-  // print_symtab_x64(elf);
+  //  reverse_print_symbols64(lst, debug);
+  //  print_dynsym_x64(elf);
+  //  print_symtab_x64(elf);
   clear_list(&lst);
   return EXIT_SUCCESS;
 }

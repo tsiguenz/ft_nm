@@ -2,14 +2,17 @@
 #define FT_NM_H
 
 #include <elf.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <libft.h>
+#include <string.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
 
 extern char *prog_name;
+extern char  file_is_stripped;
 
 typedef struct s_symbol {
   char            *name;
