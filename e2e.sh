@@ -6,7 +6,7 @@ DIFF_FILE="diff.tests"
 run_test() {
 	./ft_nm "$1" > .tmp 2>&1
 	# For errors
-	sed 's/.\/ft_nm/nm/g' .tmp > .a
+	sed 's/\.\/ft_nm/nm/g' .tmp > .a
 	nm "$1" > .b 2>&1
 	# Try ternary like syntax don't judge me
 	diff .a .b > $DIFF_FILE \
