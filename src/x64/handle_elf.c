@@ -10,12 +10,12 @@ int handle_elf64(char *file_name, uint8_t *map, off_t file_size) {
       parse_symbols64(elf, &lst))
     return EXIT_FAILURE;
   //print_all_symbols_name(lst);
+  //  print_dynsym_x64(elf);
+  //  print_symtab_x64(elf);
   delete_duplicates_symbols(&lst);
   sort_default64(&lst);
   print_symbols64(lst, debug);
   //  reverse_print_symbols64(lst, debug);
-  //  print_dynsym_x64(elf);
-  //  print_symtab_x64(elf);
   clear_list(&lst);
   return EXIT_SUCCESS;
 }

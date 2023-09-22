@@ -1,5 +1,22 @@
 # TODO
 
+- handle multipe files
+- handle arguments for bonuses
+- test bonuses
+- do -h for bad argument ?
+
+```
+Usage: ft_nm [option(s)] [file(s)]
+    List symbols in [file(s)] (a.out by default).
+    The options are:
+    -a: Display debugger-only symbols
+    -g: Display only external symbols
+    -u: Display only undefined symbols
+    -r: Reverse the sense of the sort
+    -p: Do not sort the symbols
+ft_nm: supported targets: 86_32, x64, object files, .so
+```
+
 ## Test cases
 
 ### Functional tests
