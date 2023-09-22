@@ -8,9 +8,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Setup C/C++ Compiler
         uses: rlalik/setup-cpp-compiler@v1.2
-      - name: echo path
-        run: echo $PATH
       - name: Run unit tests
         run: make test
       - name: Run fonctionnal tests
-        run: ./e2e.sh
+        run: make re && ./e2e.sh
