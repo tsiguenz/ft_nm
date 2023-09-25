@@ -12,7 +12,8 @@
 #include <unistd.h>
 
 extern char *prog_name;
-extern char  file_is_stripped;
+extern int   file_is_stripped;
+extern int   multiple_files;
 
 typedef struct s_symbol {
   char            *name;
@@ -67,9 +68,9 @@ void print_symtab_x64(t_elf64 elf);
 int  set_elf64_infos(t_elf64 *elf, uint8_t *map, char *file_name,
                      off_t file_size);
 int  parse_symbols64(t_elf64 elf, t_symbol **symbol);
-void print_symbols64(t_symbol *lst, char debug);
+void print_symbols64(t_symbol *lst, char *file_name, char debug);
 void print_all_symbols_name(t_symbol *lst);
-void reverse_print_symbols64(t_symbol *lst, char debug);
+void reverse_print_symbols64(t_symbol *lst, char *file_name, char debug);
 void clear_list(t_symbol **lst);
 void sort_default64(t_symbol **lst);
 void delete_duplicates_symbols(t_symbol **lst);

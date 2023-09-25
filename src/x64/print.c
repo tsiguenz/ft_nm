@@ -53,7 +53,9 @@ void print_all_symbols_name(t_symbol *lst) {
   }
 }
 
-void print_symbols64(t_symbol *lst, char debug) {
+void print_symbols64(t_symbol *lst, char *file_name, char debug) {
+  if (multiple_files)
+    ft_printf("\n%s:\n", file_name);
   while (lst) {
     if (debug || !is_debug_symbol(lst->type)) {
       print_value(lst->value, *lst);
@@ -63,7 +65,9 @@ void print_symbols64(t_symbol *lst, char debug) {
   }
 }
 
-void reverse_print_symbols64(t_symbol *lst, char debug) {
+void reverse_print_symbols64(t_symbol *lst, char *file_name, char debug) {
+  if (multiple_files)
+    ft_printf("\n%s:\n", file_name);
   while (lst->next)
     lst = lst->next;
   while (lst) {
