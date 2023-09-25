@@ -13,7 +13,7 @@ int main(int ac, char **av) {
   int res = EXIT_SUCCESS;
   for (int i = 1; i < ac; i++)
     if (nm_wrapper(av[i]) == EXIT_FAILURE)
-      res = EXIT_FAILURE;
+      res += EXIT_FAILURE;
   return res;
 }
 
