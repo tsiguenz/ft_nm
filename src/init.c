@@ -19,10 +19,12 @@ int set_file_size(char *filename, int fd, off_t *file_size) {
     return EXIT_FAILURE;
   }
   if (S_ISDIR(fs.st_mode)) {
+    close(fd);
     ft_printf_fd(2, "%s: Warning: '%s' is a directory\n", prog_name, filename);
     return EXIT_FAILURE;
   }
   if (!fs.st_size) {
+    close(fd);
     return EXIT_FAILURE;
   }
   *file_size = fs.st_size;
