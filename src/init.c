@@ -53,7 +53,7 @@ int check_format(uint8_t *map, char *filename) {
   return EXIT_SUCCESS;
 }
 
-// doesn't check if arch byte was changed
+// don't check if arch byte was changed
 int set_arch(uint8_t *map, char *filename, char *arch) {
   *arch = *(map + 0x4);
   if (*arch == ELFCLASSNONE || *arch > 2) {

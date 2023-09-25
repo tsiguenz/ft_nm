@@ -27,6 +27,7 @@ static int push_symbol(t_symbol **lst, char *name, Elf64_Addr value,
 
 // Symbol to be deleted is a
 static int is_duplicate_symbol(t_symbol *a, t_symbol *b) {
+  // This is a symbol not printed by nm but idk why
   const char *useless_symbol_name = "program_invocation_short_name";
   int         is_useless_symbol =
       !ft_strncmp(useless_symbol_name, a->name, ft_strlen(useless_symbol_name));
@@ -91,19 +92,20 @@ static int parse_dynsym(t_elf64 elf, t_symbol **lst) {
 
 int set_elf64_infos(t_elf64 *elf, uint8_t *map, char *file_name,
                     off_t file_size) {
-  elf->map                      = map;
-  elf->file_name                = file_name;
-  elf->file_size                = file_size;
-  elf->header                   = (Elf64_Ehdr *) map;
-  const uint64_t section_offset = elf->header->e_shoff;
-  const uint16_t shstr_index    = elf->header->e_shstrndx;
-  const uint16_t nb_sections    = elf->header->e_shnum;
+  elf->map                   = map;
+  elf->file_name             = file_name;
+  elf->file_size             = file_size;
+  elf->header                = (Elf64_Ehdr *) map;
+  const uint64_t sh_offset   = elf->header->e_shoff;
+  const uint16_t shstr_index = elf->header->e_shstrndx;
+  const uint16_t nb_sections = elf->header->e_shnum;
+  uint32_t       shstr_offset;
 
-  if (section_offset > (uint64_t) file_size || !section_offset ||
+  if (sh_offset > (uint64_t) file_size || !sh_offset ||
       shstr_index > nb_sections)
     return EXIT_FAILURE;
-  elf->sections               = (Elf64_Shdr *) (map + section_offset);
-  const uint32_t shstr_offset = elf->sections[shstr_index].sh_offset;
+  elf->sections = (Elf64_Shdr *) (map + sh_offset);
+  shstr_offset  = elf->sections[shstr_index].sh_offset;
   if (shstr_offset > (uint32_t) file_size)
     return EXIT_FAILURE;
   elf->shstrtab = (char *) map + shstr_offset;
@@ -116,9 +118,9 @@ int set_elf64_infos(t_elf64 *elf, uint8_t *map, char *file_name,
     const char      *section_name       = elf->shstrtab + section_name_index;
     const uint32_t   section_type       = current_section.sh_type;
 
-    if ((section_type != SHT_NOBITS && section_size > (uint64_t) file_size) ||
-        section_name_index > (uint32_t) file_size ||
-        section_offset > (uint32_t) file_size) {
+    if ((section_type != SHT_NOBITS &&
+         section_size + section_offset > (uint64_t) file_size) ||
+        section_name_index > (uint32_t) file_size) {
       return EXIT_FAILURE;
     }
 
