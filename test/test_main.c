@@ -1,6 +1,7 @@
 #include "include/test.h"
 
-char *prog_name = "./ft_nm";
+char *prog_name;
+int   multiple_files;
 int   tests_run = 0;
 
 static char *all_tests(void) {
@@ -11,8 +12,10 @@ static char *all_tests(void) {
   return 0;
 }
 
-int main(void) {
-  char *result = all_tests();
+int main(int ac, char **av) {
+  multiple_files = ac > 2;
+  prog_name      = av[0];
+  char *result   = all_tests();
 
   if (result != 0)
     printf("\e[31mERROR: %s\n", result);
