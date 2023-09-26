@@ -4,10 +4,27 @@
 
 char *prog_name;
 int   multiple_files;
+int   debugger_only  = 0;
+int   external_only  = 0;
+int   undefined_only = 0;
+int   reverse_sort   = 0;
+int   do_not_sort    = 0;
+
+static int is_multiple_file(int ac, char **av) {
+  int res = 0;
+
+  for (int i = 1; i < ac; i++) {
+    if (!ft_is_opt(av[i]))
+      res++;
+    if (res > 1)
+      return 1;
+  }
+  return 0;
+}
 
 int main(int ac, char **av) {
   prog_name      = av[0];
-  multiple_files = ac > 2;
+  multiple_files = is_multiple_file(ac, av);
   int opt;
   while ((opt = ft_getopt(ac, av, "hagurp")) != -1) {
     switch (opt) {
@@ -15,19 +32,19 @@ int main(int ac, char **av) {
       print_helper(STDOUT_FILENO);
       return EXIT_SUCCESS;
     case 'a':
-      ft_printf("-a\n");
+      debugger_only = 1;
       break;
     case 'g':
-      ft_printf("-g\n");
+      external_only = 1;
       break;
     case 'u':
-      ft_printf("-u\n");
+      undefined_only = 1;
       break;
     case 'r':
-      ft_printf("-r\n");
+      reverse_sort = 1;
       break;
     case 'p':
-      ft_printf("-p\n");
+      do_not_sort = 1;
       break;
     default:
       print_helper(STDERR_FILENO);

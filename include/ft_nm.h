@@ -15,6 +15,13 @@ extern char *prog_name;
 extern int   file_is_stripped;
 extern int   multiple_files;
 
+// Options
+extern int debugger_only;
+extern int external_only;
+extern int undefined_only;
+extern int reverse_sort;
+extern int do_not_sort;
+
 typedef struct s_symbol {
   char            *name;
   Elf64_Addr       value;
@@ -69,9 +76,13 @@ void print_symtab_x64(t_elf64 elf);
 int  set_elf64_infos(t_elf64 *elf, uint8_t *map, char *file_name,
                      off_t file_size);
 int  parse_symbols64(t_elf64 elf, t_symbol **symbol);
-void print_symbols64(t_symbol *lst, char *file_name, char debug);
 void print_all_symbols_name(t_symbol *lst);
-void reverse_print_symbols64(t_symbol *lst, char *file_name, char debug);
+void print_symbols64(t_symbol *lst, char *file_name, int debug);
+void reverse_print_symbols64(t_symbol *lst, char *file_name, int debug);
+void print_external_symbols64(t_symbol *lst, char *file_name);
+void reverse_print_external_symbols64(t_symbol *lst, char *file_name);
+void print_undefined_symbols64(t_symbol *lst, char *file_name);
+void reverse_print_undefined_symbols64(t_symbol *lst, char *file_name);
 void clear_list(t_symbol **lst);
 void sort_default64(t_symbol **lst);
 void delete_duplicates_symbols(t_symbol **lst);

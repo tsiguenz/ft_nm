@@ -46,6 +46,12 @@ static void print_value(Elf64_Addr value, t_symbol symbol) {
 
 static int is_debug_symbol(char type) { return ft_tolower(type) == 'a'; }
 
+static int is_external_symbol(char type) {
+  return (type >= 'A' && type <= 'Z') || type == 'w';
+}
+
+static int is_undefined_symbol(char type) { return type == 'U' || type == 'w'; }
+
 void print_all_symbols_name(t_symbol *lst) {
   while (lst) {
     ft_printf("%s\n", lst->name);
@@ -53,7 +59,7 @@ void print_all_symbols_name(t_symbol *lst) {
   }
 }
 
-void print_symbols64(t_symbol *lst, char *file_name, char debug) {
+void print_symbols64(t_symbol *lst, char *file_name, int debug) {
   if (multiple_files)
     ft_printf("\n%s:\n", file_name);
   while (lst) {
@@ -65,13 +71,65 @@ void print_symbols64(t_symbol *lst, char *file_name, char debug) {
   }
 }
 
-void reverse_print_symbols64(t_symbol *lst, char *file_name, char debug) {
+void reverse_print_symbols64(t_symbol *lst, char *file_name, int debug) {
   if (multiple_files)
     ft_printf("\n%s:\n", file_name);
   while (lst->next)
     lst = lst->next;
   while (lst) {
     if (debug || !is_debug_symbol(lst->type)) {
+      print_value(lst->value, *lst);
+      ft_printf(" %c %s\n", lst->type, lst->name);
+    }
+    lst = lst->prev;
+  }
+}
+
+void print_external_symbols64(t_symbol *lst, char *file_name) {
+  if (multiple_files)
+    ft_printf("\n%s:\n", file_name);
+  while (lst) {
+    if (is_external_symbol(lst->type)) {
+      print_value(lst->value, *lst);
+      ft_printf(" %c %s\n", lst->type, lst->name);
+    }
+    lst = lst->next;
+  }
+}
+
+void reverse_print_external_symbols64(t_symbol *lst, char *file_name) {
+  if (multiple_files)
+    ft_printf("\n%s:\n", file_name);
+  while (lst->next)
+    lst = lst->next;
+  while (lst) {
+    if (is_external_symbol(lst->type)) {
+      print_value(lst->value, *lst);
+      ft_printf(" %c %s\n", lst->type, lst->name);
+    }
+    lst = lst->prev;
+  }
+}
+
+void print_undefined_symbols64(t_symbol *lst, char *file_name) {
+  if (multiple_files)
+    ft_printf("\n%s:\n", file_name);
+  while (lst) {
+    if (is_undefined_symbol(lst->type)) {
+      print_value(lst->value, *lst);
+      ft_printf(" %c %s\n", lst->type, lst->name);
+    }
+    lst = lst->next;
+  }
+}
+
+void reverse_print_undefined_symbols64(t_symbol *lst, char *file_name) {
+  if (multiple_files)
+    ft_printf("\n%s:\n", file_name);
+  while (lst->next)
+    lst = lst->next;
+  while (lst) {
+    if (is_undefined_symbol(lst->type)) {
       print_value(lst->value, *lst);
       ft_printf(" %c %s\n", lst->type, lst->name);
     }
