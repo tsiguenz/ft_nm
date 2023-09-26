@@ -1,5 +1,18 @@
 #include <ft_nm.h>
 
+void print_helper(int fd) {
+  ft_printf_fd(fd, "Usage: ft_nm [option(s)] [file(s)]\n"
+                   "  List symbols in [file(s)] (a.out by default).\n"
+                   "  The options are:\n"
+                   "    -h: Display this information\n"
+                   "    -a: Display debugger-only symbols\n"
+                   "    -g: Display only external symbols\n"
+                   "    -u: Display only undefined symbols\n"
+                   "    -r: Reverse the sense of the sort\n"
+                   "    -p: Do not sort the symbols\n"
+                   "ft_nm: supported targets: 86_32, x64, object files, .so\n");
+}
+
 int nm_wrapper(char *file_name) {
   uint8_t *map       = NULL;
   off_t    file_size = 0;

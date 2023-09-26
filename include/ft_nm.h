@@ -53,13 +53,14 @@ typedef struct s_elf32 {
   uint32_t    dynsym_size;
 } t_elf32;
 
-int nm_wrapper(char *file_name);
-int init(char *file_name, uint8_t **map, off_t *file_size, char *arch);
-int set_fd(char *file_name, int *fd);
-int set_file_size(char *file_name, int fd, off_t *file_size);
-int set_mapped_file(int fd, off_t file_size, uint8_t **map);
-int check_format(uint8_t *map, char *file_name);
-int set_arch(uint8_t *map, char *file_name, char *arch);
+int  nm_wrapper(char *file_name);
+int  init(char *file_name, uint8_t **map, off_t *file_size, char *arch);
+int  set_fd(char *file_name, int *fd);
+int  set_file_size(char *file_name, int fd, off_t *file_size);
+int  set_mapped_file(int fd, off_t file_size, uint8_t **map);
+int  check_format(uint8_t *map, char *file_name);
+int  set_arch(uint8_t *map, char *file_name, char *arch);
+void print_helper(int fd);
 
 // 64 bits
 int  handle_elf64(char *file_name, uint8_t *map, off_t file_size);

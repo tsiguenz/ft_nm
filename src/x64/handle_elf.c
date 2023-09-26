@@ -12,7 +12,7 @@ int handle_elf64(char *file_name, uint8_t *map, off_t file_size) {
       return EXIT_SUCCESS;
     return EXIT_FAILURE;
   }
-  //print_all_symbols_name(lst);
+  //	print_all_symbols_name(lst);
   //  print_dynsym_x64(elf);
   //  print_symtab_x64(elf);
   delete_duplicates_symbols(&lst);

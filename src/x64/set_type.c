@@ -174,7 +174,8 @@ int set_type(char *type, Elf64_Sym symbol, t_elf64 elf) {
   char       shndx   = symbol.st_shndx;
   Elf64_Shdr section = {0};
 
-  // ft_printf(" type: %d shndx: %d st_bind: %d\n", st_type, shndx, st_bind);
+  if (shndx >= elf.header->e_shnum)
+    return EXIT_FAILURE;
   *type = '?';
   set_section_by_index(&section, shndx, elf);
   set_r(section, type);
@@ -187,7 +188,6 @@ int set_type(char *type, Elf64_Sym symbol, t_elf64 elf) {
   set_a(st_type, type);
   set_w(st_bind, st_type, shndx, type);
   set_v(st_bind, st_type, shndx, type);
-  // handle c g i P
   set_global(st_bind, type);
   return EXIT_SUCCESS;
 }

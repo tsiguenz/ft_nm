@@ -1,9 +1,8 @@
 # TODO
 
-- handle multipe files
 - handle arguments for bonuses
 - test bonuses
-- do -h for bad argument ?
+- do -h
 
 ```
 Usage: ft_nm [option(s)] [file(s)]
