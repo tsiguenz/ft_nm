@@ -7,7 +7,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-        submodules: 'git@github.com:tsiguenz/libft.git'
+          submodules: recursive
       - name: Setup C/C++ Compiler
         uses: rlalik/setup-cpp-compiler@v1.2
       - name: Run unit tests
