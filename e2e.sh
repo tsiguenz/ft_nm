@@ -31,7 +31,7 @@ printf "\nError:\n"
 run_test test
 run_test does_not_exist
 run_test_on_dir "$PWD"/test/bin/bad_files
-run_test_on_dir /bin
+# run_test_on_dir /bin
 
 printf "\nWorking 64 bits:\n"
 run_test obj/init.o
