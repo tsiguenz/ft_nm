@@ -51,18 +51,31 @@ run_test test obj/main.o
 run_test obj/main.o test
 
 printf "\nBonuses:\n"
-run_test -g test/bin/ok_files/print42_x64
+run_test -a ft_nm test/bin/ok_files/print42_x64
+run_test -a /lib/gcc/x86_64-linux-gnu/12/libcc1.so obj/init.o
+run_test -a test asdlf test/bin/bad_files/empty
+run_test -g test/bin/ok_files/print42_x64 ft_nm
 run_test -g /lib/gcc/x86_64-linux-gnu/12/libcc1.so obj/init.o
-run_test -g test asdlf test/bin/bad_files/empty
-run_test -u test/bin/ok_files/print42_x64
+run_test -g test asdlf test/bin/bad_files/empty ft_nm
+run_test -u test/bin/ok_files/print42_x64 ft_nm
 run_test -u /lib/gcc/x86_64-linux-gnu/12/libcc1.so obj/init.o
 run_test -u test asdlf test/bin/bad_files/empty
-run_test -r test/bin/ok_files/print42_x64
+run_test -r test/bin/ok_files/print42_x64 ft_nm
 run_test -r /lib/gcc/x86_64-linux-gnu/12/libcc1.so obj/init.o
 run_test -r test asdlf test/bin/bad_files/empty
 run_test -p test/bin/ok_files/print42_x64
 run_test -p /lib/gcc/x86_64-linux-gnu/12/libcc1.so obj/init.o
-run_test -p test asdlf test/bin/bad_files/empty
+run_test -p test asdlf test/bin/bad_files/empty ft_nm
+run_test -ag ft_nm obj/init.o /lib/gcc/x86_64-linux-gnu/12/libcc1.so asdf
+run_test -au ft_nm obj/init.o /lib/gcc/x86_64-linux-gnu/12/libcc1.so asdf
+run_test -ar ft_nm obj/init.o /lib/gcc/x86_64-linux-gnu/12/libcc1.so asdf
+run_test -ap ft_nm obj/init.o /lib/gcc/x86_64-linux-gnu/12/libcc1.so asdf
+run_test -gu ft_nm obj/init.o /lib/gcc/x86_64-linux-gnu/12/libcc1.so asdf
+run_test -gr ft_nm obj/init.o /lib/gcc/x86_64-linux-gnu/12/libcc1.so asdf
+run_test -gp ft_nm obj/init.o /lib/gcc/x86_64-linux-gnu/12/libcc1.so asdf
+run_test -ur ft_nm obj/init.o /lib/gcc/x86_64-linux-gnu/12/libcc1.so asdf
+run_test -up ft_nm obj/init.o /lib/gcc/x86_64-linux-gnu/12/libcc1.so asdf
+run_test -rp ft_nm obj/init.o /lib/gcc/x86_64-linux-gnu/12/libcc1.so asdf
 
 if [ ! -s $DIFF_FILE ]; then
 	rm -rf $DIFF_FILE

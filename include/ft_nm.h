@@ -76,7 +76,7 @@ void print_symtab_x64(t_elf64 elf);
 int  set_elf64_infos(t_elf64 *elf, uint8_t *map, char *file_name,
                      off_t file_size);
 int  parse_symbols64(t_elf64 elf, t_symbol **symbol);
-void print_all_symbols_name(t_symbol *lst);
+void print_all_symbols(t_symbol *lst);
 void print_symbols64(t_symbol *lst, char *file_name, int debug);
 void reverse_print_symbols64(t_symbol *lst, char *file_name, int debug);
 void print_external_symbols64(t_symbol *lst, char *file_name);
@@ -87,6 +87,8 @@ void clear_list(t_symbol **lst);
 void sort_default64(t_symbol **lst);
 void delete_duplicates_symbols(t_symbol **lst);
 int  set_type(char *type, Elf64_Sym symbol, t_elf64 elf);
+void set_section_by_index(Elf64_Shdr *section, int index, t_elf64 elf);
+int  is_debug_symbol(char type, char *name);
 
 // 32 bits
 int  handle_elf32(char *file_name, uint8_t *map, off_t file_size);

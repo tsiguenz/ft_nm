@@ -27,7 +27,7 @@
 
 ### Bonuses
 
-- [ ] a
+- [x] a
 - [x] g
 - [x] u
 - [x] r

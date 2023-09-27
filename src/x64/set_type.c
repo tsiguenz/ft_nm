@@ -1,6 +1,6 @@
 #include <ft_nm.h>
 
-static void set_section_by_index(Elf64_Shdr *section, int index, t_elf64 elf) {
+void set_section_by_index(Elf64_Shdr *section, int index, t_elf64 elf) {
   if (index < 1 || index >= elf.header->e_shnum)
     return;
   *section = elf.sections[index];
