@@ -1,8 +1,8 @@
 #include <ft_nm.h>
 
-void print_symtab_x64(t_elf64 elf) {
+void print_symtab_x32(t_elf32 elf) {
   ft_printf("SYMTAB: \n");
-  for (uint64_t i = 0; i < elf.symtab_size / sizeof(Elf64_Sym); i++) {
+  for (uint32_t i = 0; i < elf.symtab_size / sizeof(Elf32_Sym); i++) {
     char *sym_name = &elf.strtab[elf.symtab[i].st_name];
     ft_printf("[%d] %s", i, sym_name);
     if (elf.symtab[i].st_value)
@@ -11,9 +11,9 @@ void print_symtab_x64(t_elf64 elf) {
   }
 }
 
-void print_dynsym_x64(t_elf64 elf) {
+void print_dynsym_x32(t_elf32 elf) {
   ft_printf("DYNSYM: \n");
-  for (uint64_t i = 0; i < elf.dynsym_size / sizeof(Elf64_Sym); i++) {
+  for (uint32_t i = 0; i < elf.dynsym_size / sizeof(Elf32_Sym); i++) {
     char *sym_name = &elf.dynstr[elf.dynsym[i].st_name];
     ft_printf("[%d] %s ", i, sym_name);
     if (elf.dynsym[i].st_value)
@@ -22,14 +22,14 @@ void print_dynsym_x64(t_elf64 elf) {
   }
 }
 
-static void print_value(Elf64_Addr value, t_symbol64 symbol) {
+static void print_value(Elf32_Addr value, t_symbol32 symbol) {
   if (ft_tolower(symbol.type) == 'u' || symbol.type == 'w' ||
       symbol.type == 'v') {
     ft_printf("                ");
     return;
   }
   int        nb_char = 1;
-  Elf64_Addr copy    = value;
+  Elf32_Addr copy    = value;
   while (copy > 15) {
     copy = copy / 16;
     nb_char++;
@@ -55,7 +55,7 @@ static int is_external_symbol(char type, char *name) {
 
 static int is_undefined_symbol(char type) { return type == 'U' || type == 'w'; }
 
-void print_all_symbols(t_symbol64 *lst) {
+void print_all_symbols(t_symbol32 *lst) {
   while (lst) {
     print_value(lst->value, *lst);
     ft_printf(" %c %s\n", lst->type, lst->name);
@@ -63,7 +63,7 @@ void print_all_symbols(t_symbol64 *lst) {
   }
 }
 
-void print_symbol64s64(t_symbol64 *lst, char *file_name, int debug) {
+void print_symbol32s32(t_symbol32 *lst, char *file_name, int debug) {
   if (multiple_files)
     ft_printf("\n%s:\n", file_name);
   while (lst) {
@@ -75,7 +75,7 @@ void print_symbol64s64(t_symbol64 *lst, char *file_name, int debug) {
   }
 }
 
-void reverse_print_symbol64s64(t_symbol64 *lst, char *file_name, int debug) {
+void reverse_print_symbol32s32(t_symbol32 *lst, char *file_name, int debug) {
   if (multiple_files)
     ft_printf("\n%s:\n", file_name);
   while (lst->next)
@@ -89,7 +89,7 @@ void reverse_print_symbol64s64(t_symbol64 *lst, char *file_name, int debug) {
   }
 }
 
-void print_external_symbols64(t_symbol64 *lst, char *file_name) {
+void print_external_symbols32(t_symbol32 *lst, char *file_name) {
   if (multiple_files)
     ft_printf("\n%s:\n", file_name);
   while (lst) {
@@ -101,7 +101,7 @@ void print_external_symbols64(t_symbol64 *lst, char *file_name) {
   }
 }
 
-void reverse_print_external_symbols64(t_symbol64 *lst, char *file_name) {
+void reverse_print_external_symbols32(t_symbol32 *lst, char *file_name) {
   if (multiple_files)
     ft_printf("\n%s:\n", file_name);
   while (lst->next)
@@ -115,7 +115,7 @@ void reverse_print_external_symbols64(t_symbol64 *lst, char *file_name) {
   }
 }
 
-void print_undefined_symbols64(t_symbol64 *lst, char *file_name) {
+void print_undefined_symbols32(t_symbol32 *lst, char *file_name) {
   if (multiple_files)
     ft_printf("\n%s:\n", file_name);
   while (lst) {
@@ -127,7 +127,7 @@ void print_undefined_symbols64(t_symbol64 *lst, char *file_name) {
   }
 }
 
-void reverse_print_undefined_symbols64(t_symbol64 *lst, char *file_name) {
+void reverse_print_undefined_symbols32(t_symbol32 *lst, char *file_name) {
   if (multiple_files)
     ft_printf("\n%s:\n", file_name);
   while (lst->next)
