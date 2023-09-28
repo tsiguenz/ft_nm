@@ -25,7 +25,7 @@ void print_dynsym_x32(t_elf32 elf) {
 static void print_value(Elf32_Addr value, t_symbol32 symbol) {
   if (ft_tolower(symbol.type) == 'u' || symbol.type == 'w' ||
       symbol.type == 'v') {
-    ft_printf("                ");
+    ft_printf("        ");
     return;
   }
   int        nb_char = 1;
@@ -34,7 +34,7 @@ static void print_value(Elf32_Addr value, t_symbol32 symbol) {
     copy = copy / 16;
     nb_char++;
   }
-  int   padding_size = 16 - nb_char;
+  int   padding_size = 8 - nb_char;
   char *padding      = malloc((padding_size + 1) * sizeof(char));
   if (!padding)
     return;

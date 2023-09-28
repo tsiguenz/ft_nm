@@ -159,6 +159,9 @@ int set_elf32_infos(t_elf32 *elf, uint8_t *map, char *file_name,
     }
   }
   if (!elf->symtab) {
+    // in case of bad offset but not stripped
+    if (elf->symtab != (Elf32_Sym *) map)
+      return EXIT_FAILURE;
     if (multiple_files)
       ft_printf("\n%s:\n", file_name);
     ft_printf_fd(2, "%s: %s: no symbols\n", prog_name, file_name);
