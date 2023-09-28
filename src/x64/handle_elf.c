@@ -13,9 +13,9 @@ int handle_elf64(char *file_name, uint8_t *map, off_t file_size) {
   // print_dynsym_x64(elf);
   // print_symtab_x64(elf);
   delete_duplicates_symbols64(&lst);
-  // print_all_symbols64(lst);
   if (!do_not_sort)
     sort_default64(&lst);
+  // print_all_symbols64(lst);
   if (undefined_only) {
     if (!reverse_sort || do_not_sort)
       print_undefined_symbols64(lst, file_name);

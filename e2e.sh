@@ -80,6 +80,7 @@ run_test -grp   ft_nm obj/init.o asdf /lib/gcc/x86_64-linux-gnu/12/libcc1.so
 run_test -agurp ft_nm obj/init.o asdf /lib/gcc/x86_64-linux-gnu/12/libcc1.so
 run_test -pruga ft_nm obj/init.o asdf /lib/gcc/x86_64-linux-gnu/12/libcc1.so
 run_test -arpgu ft_nm obj/init.o asdf /lib/gcc/x86_64-linux-gnu/12/libcc1.so
+run_test -ar
 
 if [ ! -s $DIFF_FILE ]; then
 	rm -rf $DIFF_FILE
