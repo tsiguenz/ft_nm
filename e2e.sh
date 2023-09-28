@@ -50,9 +50,9 @@ run_test_on_dir test/bin/ok_files test/bin/bad_files
 # run_test_on_dir /usr/bin
 
 printf "\nBonuses:\n"
-#run_test -a ft_nm test/bin/ok_files/print42_x64
-#run_test -a /lib/gcc/x86_64-linux-gnu/12/libcc1.so obj/init.o
-#run_test -a test asdlf test/bin/bad_files/empty
+run_test -a ft_nm test/bin/ok_files/print42_x64
+run_test -a /lib/gcc/x86_64-linux-gnu/12/libcc1.so obj/init.o
+run_test -a test asdlf test/bin/bad_files/empty
 run_test -g test/bin/ok_files/print42_x64 ft_nm
 run_test -g /lib/gcc/x86_64-linux-gnu/12/libcc1.so obj/init.o
 run_test -g test asdlf test/bin/bad_files/empty ft_nm
