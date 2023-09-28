@@ -23,7 +23,11 @@ void sort_default32(t_symbol32 **lst) {
     for (t_symbol32 *next = current->next; next; next = next->next) {
       int cmp =
           ft_strncmp(current->name, next->name, ft_strlen(current->name) + 1);
-      if (cmp > 0 || (cmp == 0 && current->value > next->value))
+      /* Tricky thing to print same symbols name with different
+				value in ascending order. */
+      if (cmp > 0 ||
+          (cmp == 0 && current->value > next->value && !reverse_sort) ||
+          (cmp == 0 && current->value < next->value && reverse_sort))
         swap_symbol(current, next);
     }
   }
