@@ -21,7 +21,7 @@ Segfault sometimes:
 
 #### Architecture
 
-- [ ] x32 (/lib32)
+- [x] x32
 - [x] x64 (/lib)
 - [x] byte equal to ELFCLASSNONE (use xxd to edit binary file)
 - [x] x32 elf with arch byte change to x64
