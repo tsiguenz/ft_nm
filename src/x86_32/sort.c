@@ -21,8 +21,9 @@ void sort_default32(t_symbol32 **lst) {
     return;
   for (t_symbol32 *current = *lst; current; current = current->next) {
     for (t_symbol32 *next = current->next; next; next = next->next) {
-      if (ft_strncmp(current->name, next->name, ft_strlen(current->name) + 1) >
-          0)
+      int cmp =
+          ft_strncmp(current->name, next->name, ft_strlen(current->name) + 1);
+      if (cmp > 0 || (cmp == 0 && current->value > next->value))
         swap_symbol(current, next);
     }
   }

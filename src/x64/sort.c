@@ -21,8 +21,9 @@ void sort_default64(t_symbol64 **lst) {
     return;
   for (t_symbol64 *current = *lst; current; current = current->next) {
     for (t_symbol64 *next = current->next; next; next = next->next) {
-      if (ft_strncmp(current->name, next->name, ft_strlen(current->name) + 1) >
-          0)
+      int cmp =
+          ft_strncmp(current->name, next->name, ft_strlen(current->name) + 1);
+      if (cmp > 0 || (cmp == 0 && current->value > next->value))
         swap_symbol(current, next);
     }
   }

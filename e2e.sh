@@ -20,9 +20,7 @@ run_test() {
 }
 
 run_test_on_dir() {
-	for line in $(ls -d "$1"/*);
-		do run_test "$line";
-	done
+		run_test $(ls -d "$1"/*)
 }
 
 rm -rf diff.test
@@ -31,7 +29,6 @@ printf "\nError:\n"
 run_test test
 run_test does_not_exist
 run_test_on_dir test/bin/bad_files
-# run_test_on_dir /bin
 
 printf "\nWorking:\n"
 run_test obj/init.o
@@ -47,11 +44,15 @@ run_test test does_not_exist
 run_test obj/init.o obj/main.o
 run_test test obj/main.o
 run_test obj/main.o test
+run_test_on_dir test/bin/ok_files test/bin/bad_files
+# don't uncomment before push (ci is too long)
+# run_test_on_dir /bin
+# run_test_on_dir /usr/bin
 
 printf "\nBonuses:\n"
-run_test -a ft_nm test/bin/ok_files/print42_x64
-run_test -a /lib/gcc/x86_64-linux-gnu/12/libcc1.so obj/init.o
-run_test -a test asdlf test/bin/bad_files/empty
+#run_test -a ft_nm test/bin/ok_files/print42_x64
+#run_test -a /lib/gcc/x86_64-linux-gnu/12/libcc1.so obj/init.o
+#run_test -a test asdlf test/bin/bad_files/empty
 run_test -g test/bin/ok_files/print42_x64 ft_nm
 run_test -g /lib/gcc/x86_64-linux-gnu/12/libcc1.so obj/init.o
 run_test -g test asdlf test/bin/bad_files/empty ft_nm
