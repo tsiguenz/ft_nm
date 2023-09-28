@@ -44,18 +44,18 @@ static void print_value(Elf32_Addr value, t_symbol32 symbol) {
   free(padding);
 }
 
-int is_debug_symbol(char type, char *name) {
+int is_debug_symbol32(char type, char *name) {
   return ft_tolower(type) == 'a' || type == 'N' || *name == '.';
 }
 
 static int is_external_symbol(char type, char *name) {
   return ((type >= 'A' && type <= 'Z') || type == 'w') &&
-         !is_debug_symbol(type, name);
+         !is_debug_symbol32(type, name);
 }
 
 static int is_undefined_symbol(char type) { return type == 'U' || type == 'w'; }
 
-void print_all_symbols(t_symbol32 *lst) {
+void print_all_symbols32(t_symbol32 *lst) {
   while (lst) {
     print_value(lst->value, *lst);
     ft_printf(" %c %s\n", lst->type, lst->name);
@@ -63,11 +63,11 @@ void print_all_symbols(t_symbol32 *lst) {
   }
 }
 
-void print_symbol32s32(t_symbol32 *lst, char *file_name, int debug) {
+void print_symbols32(t_symbol32 *lst, char *file_name, int debug) {
   if (multiple_files)
     ft_printf("\n%s:\n", file_name);
   while (lst) {
-    if (debug || !is_debug_symbol(lst->type, lst->name)) {
+    if (debug || !is_debug_symbol32(lst->type, lst->name)) {
       print_value(lst->value, *lst);
       ft_printf(" %c %s\n", lst->type, lst->name);
     }
@@ -75,13 +75,13 @@ void print_symbol32s32(t_symbol32 *lst, char *file_name, int debug) {
   }
 }
 
-void reverse_print_symbol32s32(t_symbol32 *lst, char *file_name, int debug) {
+void reverse_print_symbols32(t_symbol32 *lst, char *file_name, int debug) {
   if (multiple_files)
     ft_printf("\n%s:\n", file_name);
   while (lst->next)
     lst = lst->next;
   while (lst) {
-    if (debug || !is_debug_symbol(lst->type, lst->name)) {
+    if (debug || !is_debug_symbol32(lst->type, lst->name)) {
       print_value(lst->value, *lst);
       ft_printf(" %c %s\n", lst->type, lst->name);
     }

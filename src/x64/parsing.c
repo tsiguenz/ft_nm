@@ -1,7 +1,5 @@
 #include <ft_nm.h>
 
-int file_is_stripped = 0;
-
 static int push_symbol(t_symbol64 **lst, char *name, Elf64_Addr value,
                        char type) {
   t_symbol64 *tmp = *lst;

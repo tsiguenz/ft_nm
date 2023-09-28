@@ -4,11 +4,12 @@
 
 char *prog_name;
 int   multiple_files;
-int   debugger_only  = 0;
-int   external_only  = 0;
-int   undefined_only = 0;
-int   reverse_sort   = 0;
-int   do_not_sort    = 0;
+int   file_is_stripped = 0;
+int   debugger_only    = 0;
+int   external_only    = 0;
+int   undefined_only   = 0;
+int   reverse_sort     = 0;
+int   do_not_sort      = 0;
 
 static int is_multiple_file(int ac, char **av) {
   int res = 0;
