@@ -21,6 +21,10 @@ SRC_NAME = main.c \
 					 x64/set_type.c \
 \
 					 x86_32/handle_elf.c \
+					 x86_32/parsing.c \
+					 x86_32/print.c \
+					 x86_32/sort.c \
+					 x86_32/set_type.c \
 
 
 

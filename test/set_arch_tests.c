@@ -21,8 +21,7 @@ char *set_arch_tests(void) {
     mu_assert(__FILE__ ": 64 bits elf arch value", arch == ELFCLASS64);
   }
   {
-    // TODO: change file name when 32 bits was handled
-    char *filename = "test/bin/ok_files/.print42_x86_32";
+    char *filename = "test/bin/ok_files/print42_x86_32";
     test_helper(filename, &fd, &file_size, &map);
     mu_assert(__FILE__ ": 32 bits elf ret val",
               !set_arch(map, filename, &arch));

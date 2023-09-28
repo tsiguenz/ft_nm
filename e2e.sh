@@ -20,9 +20,7 @@ run_test() {
 }
 
 run_test_on_dir() {
-	for line in $(ls -d "$1"/*);
-		do run_test "$line";
-	done
+		run_test $(ls -d "$1"/*)
 }
 
 rm -rf diff.test
@@ -30,25 +28,26 @@ rm -rf diff.test
 printf "\nError:\n"
 run_test test
 run_test does_not_exist
-run_test_on_dir "$PWD"/test/bin/bad_files
-# run_test_on_dir /bin
+run_test_on_dir test/bin/bad_files
 
-printf "\nWorking 64 bits:\n"
+printf "\nWorking:\n"
 run_test obj/init.o
 run_test obj/main.o
 run_test obj/nm_wrapper.o
 run_test libft/obj/get_next_line.o
 run_test /lib/gcc/x86_64-linux-gnu/12/libcc1.so
 run_test /lib/gcc/x86_64-linux-gnu/12/liblsan.so
-run_test_on_dir "$PWD"/test/bin/ok_files
-
-printf "\nWorking 32 bits:\n"
+run_test_on_dir test/bin/ok_files
 
 printf "\nMultiple files:\n"
 run_test test does_not_exist
 run_test obj/init.o obj/main.o
 run_test test obj/main.o
 run_test obj/main.o test
+run_test_on_dir test/bin/ok_files test/bin/bad_files
+# don't uncomment before push (ci is too long)
+# run_test_on_dir /bin
+# run_test_on_dir /usr/bin
 
 printf "\nBonuses:\n"
 run_test -a ft_nm test/bin/ok_files/print42_x64

@@ -18,3 +18,5 @@ ft_nm_test
 a.out
 .nfs*
 *.test*
+a
+b

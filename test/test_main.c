@@ -2,12 +2,13 @@
 
 char *prog_name;
 int   multiple_files;
-int   tests_run      = 0;
-int   debugger_only  = 0;
-int   external_only  = 0;
-int   undefined_only = 0;
-int   reverse_sort   = 0;
-int   do_not_sort    = 0;
+int   file_is_stripped = 0;
+int   tests_run        = 0;
+int   debugger_only    = 0;
+int   external_only    = 0;
+int   undefined_only   = 0;
+int   reverse_sort     = 0;
+int   do_not_sort      = 0;
 
 static char *all_tests(void) {
   mu_run_test(set_fd_tests);
