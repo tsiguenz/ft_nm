@@ -159,7 +159,7 @@ int set_elf64_infos(t_elf64 *elf, uint8_t *map, char *file_name,
     }
   }
   if (!elf->symtab) {
-    if (multiple_files)
+    if (nb_files > 1)
       ft_printf("\n%s:\n", file_name);
     ft_printf_fd(2, "%s: %s: no symbols\n", prog_name, file_name);
     file_is_stripped = 1;

@@ -3,7 +3,7 @@
 #include <ft_nm.h>
 
 char *prog_name;
-int   multiple_files;
+int   nb_files;
 int   file_is_stripped = 0;
 int   debugger_only    = 0;
 int   external_only    = 0;
@@ -17,15 +17,13 @@ static int is_multiple_file(int ac, char **av) {
   for (int i = 1; i < ac; i++) {
     if (!ft_is_opt(av[i]))
       res++;
-    if (res > 1)
-      return 1;
   }
-  return 0;
+  return res;
 }
 
 int main(int ac, char **av) {
-  prog_name      = av[0];
-  multiple_files = is_multiple_file(ac, av);
+  prog_name = av[0];
+  nb_files  = is_multiple_file(ac, av);
   int opt;
   while ((opt = ft_getopt(ac, av, "hagurp")) != -1) {
     switch (opt) {
@@ -52,7 +50,7 @@ int main(int ac, char **av) {
       return EXIT_FAILURE;
     }
   }
-  if (ac == 1)
+  if (!nb_files)
     return nm_wrapper("a.out");
   int res = EXIT_SUCCESS;
   for (int i = 1; i < ac; i++) {

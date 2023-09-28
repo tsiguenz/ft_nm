@@ -64,7 +64,7 @@ void print_all_symbols32(t_symbol32 *lst) {
 }
 
 void print_symbols32(t_symbol32 *lst, char *file_name, int debug) {
-  if (multiple_files)
+  if (nb_files > 1)
     ft_printf("\n%s:\n", file_name);
   while (lst) {
     if (debug || !is_debug_symbol32(lst->type, lst->name)) {
@@ -76,7 +76,7 @@ void print_symbols32(t_symbol32 *lst, char *file_name, int debug) {
 }
 
 void reverse_print_symbols32(t_symbol32 *lst, char *file_name, int debug) {
-  if (multiple_files)
+  if (nb_files > 1)
     ft_printf("\n%s:\n", file_name);
   while (lst->next)
     lst = lst->next;
@@ -90,7 +90,7 @@ void reverse_print_symbols32(t_symbol32 *lst, char *file_name, int debug) {
 }
 
 void print_external_symbols32(t_symbol32 *lst, char *file_name) {
-  if (multiple_files)
+  if (nb_files > 1)
     ft_printf("\n%s:\n", file_name);
   while (lst) {
     if (is_external_symbol(lst->type, lst->name)) {
@@ -102,7 +102,7 @@ void print_external_symbols32(t_symbol32 *lst, char *file_name) {
 }
 
 void reverse_print_external_symbols32(t_symbol32 *lst, char *file_name) {
-  if (multiple_files)
+  if (nb_files > 1)
     ft_printf("\n%s:\n", file_name);
   while (lst->next)
     lst = lst->next;
@@ -116,7 +116,7 @@ void reverse_print_external_symbols32(t_symbol32 *lst, char *file_name) {
 }
 
 void print_undefined_symbols32(t_symbol32 *lst, char *file_name) {
-  if (multiple_files)
+  if (nb_files > 1)
     ft_printf("\n%s:\n", file_name);
   while (lst) {
     if (is_undefined_symbol(lst->type)) {
@@ -128,7 +128,7 @@ void print_undefined_symbols32(t_symbol32 *lst, char *file_name) {
 }
 
 void reverse_print_undefined_symbols32(t_symbol32 *lst, char *file_name) {
-  if (multiple_files)
+  if (nb_files > 1)
     ft_printf("\n%s:\n", file_name);
   while (lst->next)
     lst = lst->next;

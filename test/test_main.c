@@ -1,7 +1,7 @@
 #include "include/test.h"
 
 char *prog_name;
-int   multiple_files;
+int   nb_files         = 0;
 int   file_is_stripped = 0;
 int   tests_run        = 0;
 int   debugger_only    = 0;
@@ -19,9 +19,9 @@ static char *all_tests(void) {
 }
 
 int main(int ac, char **av) {
-  multiple_files = ac > 2;
-  prog_name      = av[0];
-  char *result   = all_tests();
+  (void) ac;
+  prog_name    = av[0];
+  char *result = all_tests();
 
   if (result != 0)
     printf("\e[31mERROR: %s\n", result);

@@ -13,7 +13,7 @@
 
 extern char *prog_name;
 extern int   file_is_stripped;
-extern int   multiple_files;
+extern int   nb_files;
 
 // Options
 extern int debugger_only;
