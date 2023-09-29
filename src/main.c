@@ -56,13 +56,10 @@ int main(int ac, char **av) {
   for (int i = 1; i < ac; i++) {
     if (ft_is_opt(av[i]))
       continue;
-    ft_printf("%s: %d\n", __FILE__, __LINE__);
     if (nm_wrapper(av[i]) == EXIT_FAILURE) {
-      ft_printf("%s: %d\n", __FILE__, __LINE__);
       res += EXIT_FAILURE;
     }
   }
-  ft_printf("%s: %d\n", __FILE__, __LINE__);
   return res;
 }
 

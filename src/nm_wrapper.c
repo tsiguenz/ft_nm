@@ -19,11 +19,8 @@ int nm_wrapper(char *file_name) {
   char     arch      = 0;
   int      res       = 0;
 
-  ft_printf("%s: %d\n", __FILE__, __LINE__);
-  if (init(file_name, &map, &file_size, &arch)) {
-    ft_printf("%s: %d\n", __FILE__, __LINE__);
+  if (init(file_name, &map, &file_size, &arch))
     return EXIT_FAILURE;
-  }
   if (arch == ELFCLASS32)
     res = handle_elf32(file_name, map, file_size);
   if (arch == ELFCLASS64)
