@@ -73,7 +73,7 @@ int  init(char *file_name, uint8_t **map, off_t *file_size, char *arch);
 int  set_fd(char *file_name, int *fd);
 int  set_file_size(char *file_name, int fd, off_t *file_size);
 int  set_mapped_file(int fd, off_t file_size, uint8_t **map);
-int  check_format(uint8_t *map, char *file_name);
+int  check_format(uint8_t *map, char *file_name, off_t file_size);
 int  set_arch(uint8_t *map, char *file_name, char *arch);
 void print_helper(int fd);
 

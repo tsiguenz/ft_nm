@@ -4,12 +4,12 @@
 
 char *prog_name;
 int   nb_files;
-int   file_is_stripped = 0;
-int   debugger_only    = 0;
-int   external_only    = 0;
-int   undefined_only   = 0;
-int   reverse_sort     = 0;
-int   do_not_sort      = 0;
+int   file_is_stripped;
+int   debugger_only;
+int   external_only;
+int   undefined_only;
+int   reverse_sort;
+int   do_not_sort;
 
 static int is_multiple_file(int ac, char **av) {
   int res = 0;
@@ -56,8 +56,9 @@ int main(int ac, char **av) {
   for (int i = 1; i < ac; i++) {
     if (ft_is_opt(av[i]))
       continue;
-    if (nm_wrapper(av[i]) == EXIT_FAILURE)
+    if (nm_wrapper(av[i]) == EXIT_FAILURE) {
       res += EXIT_FAILURE;
+    }
   }
   return res;
 }

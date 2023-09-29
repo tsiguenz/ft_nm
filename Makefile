@@ -2,7 +2,7 @@ NAME = ft_nm
 TEST_NAME = $(NAME)_test
 
 CC = gcc
-FLAGS = -g3 -Wall -Wextra -Werror
+FLAGS = -g3 -Wall -Wextra -Werror -fsanitize=address
 
 SRC_PATH = src/
 OBJ_PATH = obj/

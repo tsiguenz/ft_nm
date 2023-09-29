@@ -23,7 +23,7 @@ int nm_wrapper(char *file_name) {
     return EXIT_FAILURE;
   if (arch == ELFCLASS32)
     res = handle_elf32(file_name, map, file_size);
-  else
+  if (arch == ELFCLASS64)
     res = handle_elf64(file_name, map, file_size);
   munmap(map, file_size);
   if (res && !file_is_stripped)
