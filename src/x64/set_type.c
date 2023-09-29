@@ -90,6 +90,13 @@ static int is_tm_clone_table(Elf64_Shdr section, t_elf64 elf) {
                      ft_strlen(section_name));
 }
 
+static int is_preinit_array(Elf64_Shdr section, t_elf64 elf) {
+  const char *section_name = ".preinit_array";
+  return section.sh_type == SHT_PREINIT_ARRAY &&
+         !ft_strncmp(section_name, &elf.shstrtab[section.sh_name],
+                     ft_strlen(section_name));
+}
+
 static int is_readonly_section(Elf64_Shdr section) {
   return section.sh_flags != SHF_WRITE;
 }
@@ -143,7 +150,8 @@ static void set_d(Elf64_Shdr section, t_elf64 elf, char *type) {
   if (is_data_section(section, elf) || is_tdata_section(section, elf) ||
       is_fini_array_section(section, elf) ||
       is_init_array_section(section, elf) || is_got_section(section, elf) ||
-      is_dynamic_section(section, elf) || is_tm_clone_table(section, elf))
+      is_dynamic_section(section, elf) || is_tm_clone_table(section, elf) ||
+      is_preinit_array(section, elf))
     *type = 'd';
 }
 
