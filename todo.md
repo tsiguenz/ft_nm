@@ -39,8 +39,3 @@ Segfault sometimes:
 - [x] r
 - [x] p
 - [x] multiple
-
-### Misc
-
-- [ ] file with offset point out of the mapped content
-- [ ] change the value of sh_link
