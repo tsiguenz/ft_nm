@@ -34,7 +34,7 @@ int set_file_size(char *filename, int fd, off_t *file_size) {
 int set_mapped_file(int fd, off_t file_size, uint8_t **map) {
   *map = mmap(NULL, file_size, PROT_READ, MAP_PRIVATE, fd, 0);
   close(fd);
-  if (map == MAP_FAILED) {
+  if (*map == MAP_FAILED) {
     ft_printf_fd(2, "%s: error: %s\n", prog_name, strerror(errno));
     return EXIT_FAILURE;
   }
